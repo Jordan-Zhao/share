@@ -2,8 +2,17 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>maven_springmvc_mybatis_demo</display-name>
- 
+  <display-name>share locker</display-name>
+ 	
+ 	<!-- log4j -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    
     <!-- 读取spring配置文件 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -15,7 +24,7 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/
     </listener>
  	
  	<!-- encoding -->
-   <!--  <filter>
+   <filter>
         <filter-name>encoding</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
@@ -25,8 +34,8 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/
     </filter>
     <filter-mapping>
         <filter-name>encoding</filter-name>
-        <url-pattern>*.do</url-pattern>
-    </filter-mapping> -->
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
     
     <!-- /locker/* url -->
     <servlet>

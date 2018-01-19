@@ -15,6 +15,23 @@
 	<name>locker-web Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
+		<!-- 子模块依赖 -->
+		<dependency>
+			<groupId>com.share.locker</groupId>
+			<artifactId>locker-common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.share.locker</groupId>
+			<artifactId>locker-dao</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.share.locker</groupId>
+			<artifactId>locker-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		
 		<!-- 添加Spring依赖 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -104,6 +121,7 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>locker-web</finalName>

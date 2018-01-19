@@ -12,4 +12,13 @@
   <version>1.0-SNAPSHOT</version>
   <name>Archetype - locker-dao</name>
   <url>http://maven.apache.org</url>
+  
+   <dependencies>
+		<!-- 子模块依赖 -->
+		<dependency>
+			<groupId>com.share.locker</groupId>
+			<artifactId>locker-common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>
