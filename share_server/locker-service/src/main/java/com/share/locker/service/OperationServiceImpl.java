@@ -11,7 +11,7 @@ import com.share.locker.common.LockerConstants;
 import com.share.locker.dao.OperationConfigDao;
 
 @Service
-public class OperationServiceImpl implements OperationService{
+public class OperationServiceImpl extends BaseServiceImpl implements OperationService {
 
 	@Autowired
 	private OperationConfigDao operationConfigDao;
@@ -21,18 +21,18 @@ public class OperationServiceImpl implements OperationService{
 		configCodeList.add(LockerConstants.OPERATION_BANNER);
 		return operationConfigDao.selectOperationConfigByCode(configCodeList).get(0);
 	}
-	
+
 	public OperationConfigBO getOperationCenterConfig() {
 		List<String> configCodeList = new ArrayList<>();
 		configCodeList.add(LockerConstants.OPERATION_CENTER);
 		return operationConfigDao.selectOperationConfigByCode(configCodeList).get(0);
 	}
-	
+
 	public List<OperationConfigBO> getOperationConfig4HomePage() {
 		List<String> configCodeList = new ArrayList<>();
 		configCodeList.add(LockerConstants.OPERATION_BANNER);
 		configCodeList.add(LockerConstants.OPERATION_CENTER);
 		return operationConfigDao.selectOperationConfigByCode(configCodeList);
 	}
-	
+
 }

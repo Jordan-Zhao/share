@@ -7,7 +7,7 @@ import com.share.locker.bo.UserBO;
 import com.share.locker.dao.UserDao;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Autowired
 	private UserDao userDao;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.locker.dao.TradeDao">
+
+	<!-- bo对象和table字段对应 -->
+	<resultMap id="BaseResultMap" type="com.share.locker.bo.TradeBO">
+		<result column="tradeId" property="tradeId" />
+		<result column="orderId" property="orderId" />
+		<result column="tradeType" property="tradeType" />
+		<result column="itemId" property="itemId" />
+		<result column="ownerId" property="ownerId" />
+		<result column="renterId" property="renterId" />
+		<result column="fee" property="fee" />
+		<result column="finishTime" property="finishTime" />
+		<result column="paymentType" property="paymentType" />
+		<result column="remark" property="remark" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_time" property="editTime" />
+		<result column="editor" property="editor" />
+		<result column="status" property="status" />
+	</resultMap>
+
+</mapper>

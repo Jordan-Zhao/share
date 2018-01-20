@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.locker.dao.OrderDao">
+
+	<!-- bo对象和table字段对应 -->
+	<resultMap id="BaseResultMap" type="com.share.locker.bo.OrderBO">
+		<result column="order_id" property="orderId" />
+		<result column="item_id" property="itemId" />
+		<result column="owner_id" property="ownerId" />
+		<result column="renter_id" property="renterId" />
+		<result column="deposit" property="deposit" />
+		<result column="title" property="title" />
+		<result column="take_time" property="takeTime" />
+		<result column="fee" property="fee" />
+		<result column="return_locker_id" property="returnLockerId" />
+		<result column="return_time" property="returnTime" />
+		<result column="check_time" property="checkTime" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_time" property="editTime" />
+		<result column="editor" property="editor" />
+		<result column="status" property="status" />
+	</resultMap>
+
+</mapper>

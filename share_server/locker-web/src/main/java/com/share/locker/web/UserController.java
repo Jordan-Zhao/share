@@ -76,7 +76,7 @@ public class UserController extends BaseController {
 			return null;
 		} else {
 			Map<String, Object> userInfoMap = new HashMap<>();
-			userInfoMap.put("user_icon_url", LockerConstants.MOCK_URL_BASE + "item2.png");
+			userInfoMap.put("user_icon_url", LockerConstants.MOCK_URL_BASE + "icon11.png");
 			userInfoMap.put("nick", loginUser.getNick());
 			userInfoMap.put("email", loginUser.getEmail());
 			userInfoMap.put("phone_number", loginUser.getPhoneNumber());

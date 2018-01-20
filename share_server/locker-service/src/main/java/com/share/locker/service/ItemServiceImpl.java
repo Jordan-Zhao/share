@@ -10,7 +10,7 @@ import com.share.locker.bo.ItemBO;
 import com.share.locker.dao.ItemDao;
 
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 	@Autowired
 	private ItemDao itemDao;
 

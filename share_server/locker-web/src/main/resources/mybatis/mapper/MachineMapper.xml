@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.locker.dao.MachineDao">
+
+	<!-- bo对象和table字段对应 -->
+	<resultMap id="BaseResultMap" type="com.share.locker.bo.MachineBO">
+		<result column="machine_id" property="machineId" />
+		<result column="location" property="location" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_time" property="editTime" />
+		<result column="editor" property="editor" />
+		<result column="status" property="status" />
+	</resultMap>
+
+</mapper>

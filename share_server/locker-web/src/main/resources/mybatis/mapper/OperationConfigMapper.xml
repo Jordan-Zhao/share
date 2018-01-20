@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.locker.dao.OperationConfigDao">
+
+	<!-- bo对象和table字段对应 -->
+	<resultMap id="BaseResultMap" type="com.share.locker.bo.OperationConfigBO">
+		<result column="id" property="id"/>
+		<result column="config_code" property="configCode" />
+		<result column="content" property="content" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_time" property="editTime" />
+		<result column="editor" property="editor" />
+		<result column="status" property="status" />
+	</resultMap>
+
+	<!-- 查询单条记录 -->
+	<select id="selectOperationConfigByCode" parameterType="java.util.List"
+		resultMap="BaseResultMap">
+		select * from shr_operation_config
+		where config_code
+		in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>
