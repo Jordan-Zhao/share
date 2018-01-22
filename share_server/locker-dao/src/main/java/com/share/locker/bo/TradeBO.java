@@ -9,95 +9,76 @@ import java.util.Date;
  *
  */
 public class TradeBO extends BaseBO {
-	private Integer tradeId;
-	private Integer orderId;
+	private Long tradeId;
+	private Long orderId;
 	private String tradeType;
-	private Integer itemId;
-	private Integer ownerId;
-	private Integer renterId;
+	private Long itemId;
+	private Long ownerId;
+	private Long renterId;
 	private Integer fee;
 	private Date finishTime;
 	private String paymentType;
 	private String remark;
-
-	public Integer getTradeId() {
+	public Long getTradeId() {
 		return tradeId;
 	}
-
-	public void setTradeId(Integer tradeId) {
+	public void setTradeId(Long tradeId) {
 		this.tradeId = tradeId;
 	}
-
-	public Integer getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
-
-	public void setOrderId(Integer orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
-
 	public String getTradeType() {
 		return tradeType;
 	}
-
 	public void setTradeType(String tradeType) {
 		this.tradeType = tradeType;
 	}
-
-	public Integer getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
-
-	public void setItemId(Integer itemId) {
+	public void setItemId(Long itemId) {
 		this.itemId = itemId;
 	}
-
-	public Integer getOwnerId() {
+	public Long getOwnerId() {
 		return ownerId;
 	}
-
-	public void setOwnerId(Integer ownerId) {
+	public void setOwnerId(Long ownerId) {
 		this.ownerId = ownerId;
 	}
-
-	public Integer getRenterId() {
+	public Long getRenterId() {
 		return renterId;
 	}
-
-	public void setRenterId(Integer renterId) {
+	public void setRenterId(Long renterId) {
 		this.renterId = renterId;
 	}
-
 	public Integer getFee() {
 		return fee;
 	}
-
 	public void setFee(Integer fee) {
 		this.fee = fee;
 	}
-
 	public Date getFinishTime() {
 		return finishTime;
 	}
-
 	public void setFinishTime(Date finishTime) {
 		this.finishTime = finishTime;
 	}
-
 	public String getPaymentType() {
 		return paymentType;
 	}
-
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
 	}
-
 	public String getRemark() {
 		return remark;
 	}
-
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
 
 }

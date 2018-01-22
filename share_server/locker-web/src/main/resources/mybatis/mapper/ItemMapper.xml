@@ -2,7 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.locker.dao.ItemDao">
-
+	
+	<parameterMap type="com.share.locker.bo.ItemBO" id="ItemParamMap" ></parameterMap>
+	<parameterMap type="com.share.locker.bo.ItemImgBO" id="ItemImgParamMap" ></parameterMap>
+	
 	<!-- bo对象和table字段对应 -->
 	<resultMap id="BaseResultMap" type="com.share.locker.bo.ItemBO">
 		<result column="item_id" property="itemId" />
@@ -20,6 +23,18 @@
 		<result column="editor" property="editor" />
 		<result column="status" property="status" />
 	</resultMap>
+	
+	<!-- ItemImgBo对象和table字段对应 -->
+	<resultMap id="ItemImgResultMap" type="com.share.locker.bo.ItemImgBO">
+		<result column="id" property="id" />
+		<result column="item_id" property="itemId" />
+		<result column="img_size_code" property="imgSizeCode" />
+		<result column="url" property="url" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_time" property="editTime" />
+		<result column="editor" property="editor" />
+		<result column="status" property="status" />
+	</resultMap>
 
 	<!-- 查询单条记录 -->
 	<select id="selectItemByIdList" parameterType="java.util.List"
@@ -31,4 +46,27 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<!-- 发布宝贝 -->
+	<insert id="saveItem" parameterMap="ItemParamMap" useGeneratedKeys="true">  
+		<selectKey resultType="long" keyProperty="itemId" order="AFTER">  
+	        SELECT LAST_INSERT_ID()  
+	    </selectKey>  
+		INSERT INTO shr_item (user_id, title, price_time_unit, price_time, price, deposit, locker_size_code,
+		 	locker_id, publish_status, create_time, edit_time, editor, status) 
+		 VALUES (#{userId}, #{title}, #{priceTimeUnit}, #{priceTime}, #{price}, #{deposit}, #{lockerSizeCode}, #{lockerId},
+		 	 #{publishStatus}, now(), now(), #{editor}, #{status})
+	</insert> 
+	<!-- 保存宝贝的图片URL -->
+	<insert id="saveItemImg" parameterType="java.util.List" useGeneratedKeys="true">  
+		<selectKey resultType="long" keyProperty="id" order="AFTER">  
+	        SELECT LAST_INSERT_ID()  
+	    </selectKey>  
+		 INSERT INTO shr_item_img (item_id, img_size_code, url, create_time, edit_time, editor, status) 
+	     values  
+		    <foreach collection="list" item="itemImg" index="index" separator="," >  
+		    	(#{itemImg.itemId}, #{itemImg.imgSizeCode}, #{itemImg.url},now(), now(), #{itemImg.editor}, #{itemImg.status})
+		    </foreach>
+	</insert> 
+	
 </mapper>

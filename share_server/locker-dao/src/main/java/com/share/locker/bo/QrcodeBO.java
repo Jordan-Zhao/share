@@ -7,49 +7,40 @@ package com.share.locker.bo;
  *
  */
 public class QrcodeBO extends BaseBO {
-	private Integer qrcodeId;
-	private Integer itemId;
-	private Integer orderId;
+	private Long qrcodeId;
+	private Long itemId;
+	private Long orderId;
 	private String type;
 	private Integer expireTime;
-
-	public Integer getQrcodeId() {
+	public Long getQrcodeId() {
 		return qrcodeId;
 	}
-
-	public void setQrcodeId(Integer qrcodeId) {
+	public void setQrcodeId(Long qrcodeId) {
 		this.qrcodeId = qrcodeId;
 	}
-
-	public Integer getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
-
-	public void setItemId(Integer itemId) {
+	public void setItemId(Long itemId) {
 		this.itemId = itemId;
 	}
-
-	public Integer getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
-
-	public void setOrderId(Integer orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
-
 	public String getType() {
 		return type;
 	}
-
 	public void setType(String type) {
 		this.type = type;
 	}
-
 	public Integer getExpireTime() {
 		return expireTime;
 	}
-
 	public void setExpireTime(Integer expireTime) {
 		this.expireTime = expireTime;
 	}
+
 }

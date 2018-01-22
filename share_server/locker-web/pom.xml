@@ -31,7 +31,7 @@
 			<artifactId>locker-service</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- 添加Spring依赖 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -121,7 +121,11 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>locker-web</finalName>

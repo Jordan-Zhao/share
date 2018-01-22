@@ -7,21 +7,17 @@ package com.share.locker.bo;
  *
  */
 public class MachineBO extends BaseBO {
-	private Integer machineId;
+	private Long machineId;
 	private String location;
-
-	public Integer getMachineId() {
+	public Long getMachineId() {
 		return machineId;
 	}
-
-	public void setMachineId(Integer machineId) {
+	public void setMachineId(Long machineId) {
 		this.machineId = machineId;
 	}
-
 	public String getLocation() {
 		return location;
 	}
-
 	public void setLocation(String location) {
 		this.location = location;
 	}

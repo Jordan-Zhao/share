@@ -7,41 +7,34 @@ package com.share.locker.bo;
  *
  */
 public class RegisterCodeBO extends BaseBO {
-	private Integer id;
-	private Integer userId;
+	private Long id;
+	private Long userId;
 	private String registerCode;
 	private Integer expireTime;
-
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public Integer getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
-
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-
 	public String getRegisterCode() {
 		return registerCode;
 	}
-
 	public void setRegisterCode(String registerCode) {
 		this.registerCode = registerCode;
 	}
-
 	public Integer getExpireTime() {
 		return expireTime;
 	}
-
 	public void setExpireTime(Integer expireTime) {
 		this.expireTime = expireTime;
 	}
 
+	
 }
