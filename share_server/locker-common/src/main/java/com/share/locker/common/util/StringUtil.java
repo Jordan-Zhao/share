@@ -8,7 +8,17 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class StringUtil {
-
+	
+	/**
+	 * 判断字符串是不是邮箱
+	 * @param userName
+	 * @return
+	 */
+	public static boolean isEmail(String userName) {
+		//TODO 优化
+		return userName.contains("@");
+	}
+	
 	/**
 	 * ������ɹ̶����ȵ��ַ���
 	 * 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
+import com.share.locker.common.util.StringUtil;
 import com.share.locker.service.UserService;
 
 @Controller
@@ -37,7 +38,7 @@ public class UserController extends BaseController {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		UserBO loginUser = null;
-		if (isEmail(userName)) {
+		if (StringUtil.isEmail(userName)) {
 			// email 登录
 			loginUser = userService.getUserByEmail(userName);
 		} else {
@@ -65,7 +66,7 @@ public class UserController extends BaseController {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		UserBO loginUser = null;
-		if (isEmail(userName)) {
+		if (StringUtil.isEmail(userName)) {
 			// email 登录
 			loginUser = userService.getUserByEmail(userName);
 		} else {
@@ -83,10 +84,5 @@ public class UserController extends BaseController {
 			writeJsonMsg(response, true, userInfoMap);
 			return null;
 		}
-	}
-	
-	private boolean isEmail(String userName) {
-		//TODO 优化
-		return userName.contains("@");
 	}
 }

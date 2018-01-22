@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.share.locker.bo.ItemBO;
+import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.service.ItemService;
+import com.share.locker.service.util.BizUtil;
 
 @Controller
 public class ItemController extends BaseController {
@@ -63,7 +65,6 @@ public class ItemController extends BaseController {
 		// 初始化文件上传对象
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setSizeThreshold(200 * 1024); // 200KB
-		factory.setRepository(factory.getRepository());
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
 		List<FileItem> formlists = null;
@@ -94,26 +95,34 @@ public class ItemController extends BaseController {
 
 		// 保存其他字段
 		ItemBO itemBO = new ItemBO();
+		UserBO loginUser = BizUtil.getLoginUser(request);
+		itemBO.setUserId(loginUser.getUserId());
+		itemBO.setEditor(loginUser.getEmail() + ";"+loginUser.getPhoneNumber());
+		itemBO.setStatus(LockerConstants.ItemStatus.VALID.getStatusCode());//状态
 		iterator = formlists.iterator();
 		while (iterator.hasNext()) {
 			FileItem formItem = iterator.next();
 			if (formItem.isFormField()) {
-				if("title".equals(formItem.getFieldName())){
-					itemBO.setTitle(formItem.getString());
-				}else if("priceTimeUnit".equals(formItem.getFieldName())){
-					itemBO.setPriceTimeUnit(formItem.getString());
-				}else if("priceTime".equals(formItem.getFieldName())){
-					itemBO.setPriceTime(Integer.parseInt(formItem.getString()));
-				}else if("price".equals(formItem.getFieldName())){
-					itemBO.setPrice(Integer.parseInt(formItem.getString()));
-				}else if("deposit".equals(formItem.getFieldName())){
-					itemBO.setDeposit(Integer.parseInt(formItem.getString()));
-				}else if("lockerSize".equals(formItem.getFieldName())){
-					itemBO.setLockerSizeCode(formItem.getString());
-				}else if("lockerId".equals(formItem.getFieldName())){
-					itemBO.setLockerId(Long.parseLong(formItem.getString()));
-				}else if("description".equals(formItem.getFieldName())){
-					itemBO.setDescription(formItem.getString());
+				String fieldName = formItem.getFieldName();
+				String fieldValue = formItem.getString();
+				if("title".equals(fieldName)){
+					itemBO.setTitle(fieldValue);
+				}else if("priceTimeUnit".equals(fieldName)){
+					itemBO.setPriceTimeUnit(fieldValue);
+				}else if("priceTime".equals(fieldName)){
+					itemBO.setPriceTime(Integer.parseInt(fieldValue));
+				}else if("price".equals(fieldName)){
+					itemBO.setPrice(Integer.parseInt(fieldValue));
+				}else if("deposit".equals(fieldName)){
+					itemBO.setDeposit(Integer.parseInt(fieldValue));
+				}else if("lockerSize".equals(fieldName)){
+					itemBO.setLockerSizeCode(fieldValue);
+				}else if("lockerId".equals(fieldName)){
+					itemBO.setLockerId(Long.parseLong(fieldValue));
+				}else if("description".equals(fieldName)){
+					itemBO.setDescription(fieldValue);
+				}else if("publishStatus".equals(fieldName)) {
+					itemBO.setPublishStatus(getPublishStatus(Boolean.valueOf(fieldValue)));
 				}
 			}
 		}
@@ -184,6 +193,10 @@ public class ItemController extends BaseController {
 			}
 		}
 		return resultMap;
+	}
+	
+	private String getPublishStatus(boolean isOnLine) {
+		return isOnLine?LockerConstants.ItemStatus.ON_LINE.getStatusCode():LockerConstants.ItemStatus.OFF_LINE.getStatusCode();
 	}
 
 	public static void main(String[] arg) {
