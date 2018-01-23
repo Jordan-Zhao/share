@@ -9,4 +9,6 @@ public interface ItemService {
 	List<ItemBO> getHotItemList();
 	
 	Long publishItem(ItemBO itemBO, Map<String, List<String>> imgUrlList);
+	
+	List<ItemBO> getItemByUserId(Long userId,List<String> statusList);
 }

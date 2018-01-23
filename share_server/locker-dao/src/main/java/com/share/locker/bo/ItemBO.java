@@ -1,5 +1,7 @@
 package com.share.locker.bo;
 
+import java.util.List;
+
 /**
  * 商品
  * 
@@ -18,6 +20,10 @@ public class ItemBO extends BaseBO {
 	private Long lockerId;
 	private String publishStatus;
 	private String description;
+	
+	private List<ItemImgBO> smallImgList;
+	private List<ItemImgBO> normalImgList;
+	
 	public Long getItemId() {
 		return itemId;
 	}
@@ -83,6 +89,18 @@ public class ItemBO extends BaseBO {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public List<ItemImgBO> getSmallImgList() {
+		return smallImgList;
+	}
+	public void setSmallImgList(List<ItemImgBO> smallImgList) {
+		this.smallImgList = smallImgList;
+	}
+	public List<ItemImgBO> getNormalImgList() {
+		return normalImgList;
+	}
+	public void setNormalImgList(List<ItemImgBO> normalImgList) {
+		this.normalImgList = normalImgList;
 	}
 
 

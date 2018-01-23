@@ -98,7 +98,7 @@ public class ItemController extends BaseController {
 		UserBO loginUser = BizUtil.getLoginUser(request);
 		itemBO.setUserId(loginUser.getUserId());
 		itemBO.setEditor(loginUser.getEmail() + ";"+loginUser.getPhoneNumber());
-		itemBO.setStatus(LockerConstants.ItemStatus.VALID.getStatusCode());//状态
+		itemBO.setStatus(LockerConstants.ItemStatus.TO_PUT.getStatusCode());//状态
 		iterator = formlists.iterator();
 		while (iterator.hasNext()) {
 			FileItem formItem = iterator.next();
@@ -130,7 +130,7 @@ public class ItemController extends BaseController {
 		writeJsonMsg(response, true, itemId);
 		return null;
 	}
-
+	
 	private List<Map<String, Object>> convertHotItemList(List<ItemBO> itemBOList) {
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (CollectionUtils.isEmpty(itemBOList)) {
@@ -187,7 +187,7 @@ public class ItemController extends BaseController {
 				// save small file
 				File smallFile = new File(smallImgFilePath, simpleFileName);
 				formitem.write(smallFile); // TODO 裁剪图片
-				normalFileList.add(LockerConstants.MOCK_URL_BASE + "images/small/" + simpleFileName);
+				smallFileList.add(LockerConstants.MOCK_URL_BASE + "images/small/" + simpleFileName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
