@@ -21,11 +21,7 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 
 	public List<ItemBO> getHotItemList() {
 		// TODO 先mock取前10条数据
-		List<String> normalStatusList = new ArrayList<>();
-		normalStatusList.add(LockerConstants.ItemStatus.TO_PUT.getStatusCode());
-		normalStatusList.add(LockerConstants.ItemStatus.ON_LINE.getStatusCode());
-		normalStatusList.add(LockerConstants.ItemStatus.OFF_LINE.getStatusCode());
-		return itemDao.selectItemTop10(normalStatusList);
+		return itemDao.selectItemTop10(LockerConstants.MY_ITEM_STATUS_LIST);
 	}
 
 	public Long publishItem(ItemBO itemBO, Map<String, List<String>> imgUrlListMap) {
@@ -48,35 +44,34 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 
 		return itemBO.getItemId();
 	}
-	
 
-	public List<ItemBO> getItemByUserId(Long userId,List<String> statusList){
-		//获取基本信息
+	public List<ItemBO> getItemByUserId(Long userId, List<String> statusList) {
+		// 获取基本信息
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userId", userId);
 		paramMap.put("statusList", statusList);
 		List<ItemBO> itemList = itemDao.getItemByUserId(paramMap);
-		
-		//获取img信息
-		if(CollectionUtils.isNotEmpty(itemList)) {
+
+		// 获取img信息
+		if (CollectionUtils.isNotEmpty(itemList)) {
 			List<Long> itemIdList = new ArrayList<>();
-			for(ItemBO itemBO : itemList) {
+			for (ItemBO itemBO : itemList) {
 				itemIdList.add(itemBO.getItemId());
 			}
 			List<String> imgStatusList = new ArrayList<>();
 			imgStatusList.add(LockerConstants.BaseDataStatus.VALID.getCode());
-			
+
 			Map<String, Object> paramMap1 = new HashMap<>();
-			paramMap1.put("itemIdList",itemIdList);
-			paramMap1.put("statusList",imgStatusList);
+			paramMap1.put("itemIdList", itemIdList);
+			paramMap1.put("statusList", imgStatusList);
 			paramMap1.put("imgSizeCode", LockerConstants.ImgSizeCode.SMALL.getSizeCode());
 			List<ItemImgBO> imgList = itemDao.getImgByItemIdList(paramMap1);
-			
-			if(CollectionUtils.isNotEmpty(imgList)) {
-				for(ItemImgBO imgBO : imgList) {
-					for(ItemBO itemBO : itemList) {
-						if(imgBO.getItemId().equals(itemBO.getItemId())) {
-							if(CollectionUtils.isEmpty(itemBO.getSmallImgList())) {
+
+			if (CollectionUtils.isNotEmpty(imgList)) {
+				for (ItemImgBO imgBO : imgList) {
+					for (ItemBO itemBO : itemList) {
+						if (imgBO.getItemId().equals(itemBO.getItemId())) {
+							if (CollectionUtils.isEmpty(itemBO.getSmallImgList())) {
 								itemBO.setSmallImgList(new ArrayList<>());
 							}
 							itemBO.getSmallImgList().add(imgBO);
@@ -85,7 +80,45 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 				}
 			}
 		}
-		
+
 		return itemList;
+	}
+
+	public ItemBO getItemDetail(Long itemId) {
+		ItemBO itemBO = itemDao.selectItemById(itemId);
+		List<Long> itemIdList = new ArrayList<>();
+		itemIdList.add(itemBO.getItemId());
+		List<String> imgStatusList = new ArrayList<>();
+		imgStatusList.add(LockerConstants.BaseDataStatus.VALID.getCode());
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("itemIdList", itemIdList);
+		paramMap.put("statusList", imgStatusList);
+		paramMap.put("imgSizeCode", LockerConstants.ImgSizeCode.NORMAL.getSizeCode());
+		List<ItemImgBO> imgList = itemDao.getImgByItemIdList(paramMap);
+
+		itemBO.setNormalImgList(imgList);
+		return itemBO;
+	}
+
+	public void onLineItem(Long itemId) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("itemId", itemId);
+		paramMap.put("status", LockerConstants.ItemStatus.ONLINE.getCode());
+		itemDao.updateItemStatus(paramMap);
+	}
+
+	public void offLineItem(Long itemId) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("itemId", itemId);
+		paramMap.put("status", LockerConstants.ItemStatus.OFFLINE.getCode());
+		itemDao.updateItemStatus(paramMap);
+	}
+
+	public void deleteItem(Long itemId) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("itemId", itemId);
+		paramMap.put("status", LockerConstants.ItemStatus.DELETED.getCode());
+		itemDao.updateItemStatus(paramMap);
 	}
 }

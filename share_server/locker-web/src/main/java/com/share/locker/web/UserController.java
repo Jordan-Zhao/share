@@ -25,8 +25,6 @@ import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
 import com.share.locker.web.dto.ItemDTO;
 
-import net.sf.json.JSONArray;
-
 @Controller
 public class UserController extends BaseController {
 	private final static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -35,7 +33,7 @@ public class UserController extends BaseController {
 	private UserService userService;
 	@Autowired
 	private ItemService itemService;
-	
+
 	/**
 	 * 登录
 	 * 
@@ -59,11 +57,11 @@ public class UserController extends BaseController {
 			writeJsonMsg(response, false, "Login failed");
 			return null;
 		} else {
-			writeJsonMsg(response, true, "Login successed");
+			writeJsonMsg(response, true, loginUser.getUserId());
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 获取“我的”信息
 	 * 
@@ -96,9 +94,10 @@ public class UserController extends BaseController {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 获取我发布的宝贝
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -108,19 +107,20 @@ public class UserController extends BaseController {
 	public Object publishItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		UserBO loginUser = BizUtil.getLoginUser(request);
 		List<ItemBO> itemList = itemService.getItemByUserId(loginUser.getUserId(), LockerConstants.MY_ITEM_STATUS_LIST);
-		//组装DTO
-		if(!CollectionUtils.isEmpty(itemList)) {
+		// 组装DTO
+		if (!CollectionUtils.isEmpty(itemList)) {
 			List<ItemDTO> itemDTOList = new ArrayList<>();
-			for(ItemBO itemBO : itemList) {
+			for (ItemBO itemBO : itemList) {
 				ItemDTO dto = new ItemDTO();
 				dto.setItemId(itemBO.getItemId());
-				if(CollectionUtils.isNotEmpty(itemBO.getSmallImgList())) {
+				if (CollectionUtils.isNotEmpty(itemBO.getSmallImgList())) {
 					dto.setSmallImgUrl(itemBO.getSmallImgList().get(0).getUrl());
 				}
 				dto.setTitle(itemBO.getTitle());
 				dto.setDeposit(BizUtil.convertDbPrice2Float(itemBO.getDeposit()));
-				dto.setPriceStr(BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
-				dto.setComment(99);//TODO
+				dto.setPriceStr(
+						BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
+				dto.setComment(99);// TODO
 				itemDTOList.add(dto);
 			}
 			writeJsonMsg(response, true, itemDTOList);

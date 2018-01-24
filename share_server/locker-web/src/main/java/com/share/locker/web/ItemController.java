@@ -24,10 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.share.locker.bo.ItemBO;
+import com.share.locker.bo.ItemImgBO;
 import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.service.ItemService;
+import com.share.locker.service.LockerService;
+import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
+import com.share.locker.web.dto.ItemDetailDTO;
 
 @Controller
 public class ItemController extends BaseController {
@@ -35,6 +39,12 @@ public class ItemController extends BaseController {
 
 	@Resource
 	private ItemService itemService;
+
+	@Resource
+	private UserService userService;
+
+	@Resource
+	private LockerService lockerService;
 
 	/**
 	 * 获取主页需要显示的运营配置信息
@@ -97,31 +107,31 @@ public class ItemController extends BaseController {
 		ItemBO itemBO = new ItemBO();
 		UserBO loginUser = BizUtil.getLoginUser(request);
 		itemBO.setUserId(loginUser.getUserId());
-		itemBO.setEditor(loginUser.getEmail() + ";"+loginUser.getPhoneNumber());
-		itemBO.setStatus(LockerConstants.ItemStatus.TO_PUT.getStatusCode());//状态
+		itemBO.setEditor(loginUser.getEmail() + ";" + loginUser.getPhoneNumber());
+		itemBO.setStatus(LockerConstants.ItemStatus.CREATED.getCode());// 状态
 		iterator = formlists.iterator();
 		while (iterator.hasNext()) {
 			FileItem formItem = iterator.next();
 			if (formItem.isFormField()) {
 				String fieldName = formItem.getFieldName();
 				String fieldValue = formItem.getString();
-				if("title".equals(fieldName)){
+				if ("title".equals(fieldName)) {
 					itemBO.setTitle(fieldValue);
-				}else if("priceTimeUnit".equals(fieldName)){
+				} else if ("priceTimeUnit".equals(fieldName)) {
 					itemBO.setPriceTimeUnit(fieldValue);
-				}else if("priceTime".equals(fieldName)){
+				} else if ("priceTime".equals(fieldName)) {
 					itemBO.setPriceTime(Integer.parseInt(fieldValue));
-				}else if("price".equals(fieldName)){
+				} else if ("price".equals(fieldName)) {
 					itemBO.setPrice(Integer.parseInt(fieldValue));
-				}else if("deposit".equals(fieldName)){
+				} else if ("deposit".equals(fieldName)) {
 					itemBO.setDeposit(Integer.parseInt(fieldValue));
-				}else if("lockerSize".equals(fieldName)){
+				} else if ("lockerSize".equals(fieldName)) {
 					itemBO.setLockerSizeCode(fieldValue);
-				}else if("lockerId".equals(fieldName)){
+				} else if ("lockerId".equals(fieldName)) {
 					itemBO.setLockerId(Long.parseLong(fieldValue));
-				}else if("description".equals(fieldName)){
+				} else if ("description".equals(fieldName)) {
 					itemBO.setDescription(fieldValue);
-				}else if("publishStatus".equals(fieldName)) {
+				} else if ("publishStatus".equals(fieldName)) {
 					itemBO.setPublishStatus(getPublishStatus(Boolean.valueOf(fieldValue)));
 				}
 			}
@@ -130,7 +140,95 @@ public class ItemController extends BaseController {
 		writeJsonMsg(response, true, itemId);
 		return null;
 	}
-	
+
+	/**
+	 * 获取宝贝详细信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getItemDetail.json", method = RequestMethod.POST)
+	public Object getItemDetail(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long itemId = Long.parseLong(request.getParameter("itemId"));
+
+		ItemDetailDTO detailDTO = new ItemDetailDTO();
+		ItemBO itemBO = itemService.getItemDetail(itemId);
+		detailDTO.setItemId(itemBO.getItemId());
+		detailDTO.setUserId(itemBO.getUserId());
+		detailDTO.setTitle(itemBO.getTitle());
+		detailDTO.setPriceStr(
+				BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
+		detailDTO.setDeposit(BizUtil.convertDbPrice2Float(itemBO.getDeposit()));
+		detailDTO.setMachineName(lockerService.getLockerById(itemBO.getLockerId()).getMachineBO().getName());
+		detailDTO.setComment(LockerConstants.MOCK_COMMENT_NUMBER);
+		detailDTO.setDescription(itemBO.getDescription());
+
+		List<String> imgUrlList = new ArrayList<>();
+		for (ItemImgBO imgBO : itemBO.getNormalImgList()) {
+			imgUrlList.add(imgBO.getUrl());
+		}
+		detailDTO.setImgList(imgUrlList);
+
+		UserBO owner = userService.getUserById(itemBO.getUserId());
+		detailDTO.setOwnnerNick(owner.getNick());
+
+		writeJsonMsg(response, true, detailDTO);
+		return null;
+	}
+
+	/**
+	 * 上架宝贝
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/onLineItem.json", method = RequestMethod.POST)
+	public Object onLineItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long itemId = Long.parseLong(request.getParameter("itemId"));
+		// TODO 校验是否本人操作、是否可上架
+		itemService.onLineItem(itemId);
+		writeJsonMsg(response, true, "上架成功");
+		return null;
+	}
+
+	/**
+	 * 下架宝贝
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/offLineItem.json", method = RequestMethod.POST)
+	public Object offLineItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long itemId = Long.parseLong(request.getParameter("itemId"));
+		// TODO 校验是否本人操作、是否可上架
+		itemService.offLineItem(itemId);
+		writeJsonMsg(response, true, "下架成功");
+		return null;
+	}
+
+	/**
+	 * 删除宝贝
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteItem.json", method = RequestMethod.POST)
+	public Object deleteItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long itemId = Long.parseLong(request.getParameter("itemId"));
+		// TODO 校验是否本人操作、是否可上架
+		itemService.deleteItem(itemId);
+		writeJsonMsg(response, true, "删除成功");
+		return null;
+	}
+
 	private List<Map<String, Object>> convertHotItemList(List<ItemBO> itemBOList) {
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (CollectionUtils.isEmpty(itemBOList)) {
@@ -165,7 +263,7 @@ public class ItemController extends BaseController {
 		List<String> smallFileList = new ArrayList<>();
 		resultMap.put(LockerConstants.ImgSizeCode.NORMAL.getSizeCode(), normalFileList);
 		resultMap.put(LockerConstants.ImgSizeCode.SMALL.getSizeCode(), smallFileList);
-		
+
 		String smallImgFilePath = request.getSession().getServletContext().getRealPath("") + "images\\small\\";
 		String normalImgFilePath = request.getSession().getServletContext().getRealPath("") + "images\\normal\\";
 
@@ -194,9 +292,9 @@ public class ItemController extends BaseController {
 		}
 		return resultMap;
 	}
-	
+
 	private String getPublishStatus(boolean isOnLine) {
-		return isOnLine?LockerConstants.ItemStatus.ON_LINE.getStatusCode():LockerConstants.ItemStatus.OFF_LINE.getStatusCode();
+		return isOnLine ? LockerConstants.ItemStatus.ONLINE.getCode() : LockerConstants.ItemStatus.OFFLINE.getCode();
 	}
 
 	public static void main(String[] arg) {

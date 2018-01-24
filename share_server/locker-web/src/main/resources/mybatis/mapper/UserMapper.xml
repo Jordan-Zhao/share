@@ -27,9 +27,14 @@
 		where email = #{email}
 	</select>
 
-	<select id="selectUserByPhoneNumber" parameterType="string"
-		resultMap="BaseResultMap">
+	<select id="selectUserByPhoneNumber" parameterType="string" resultMap="BaseResultMap">
 		select * from shr_user
 		where phone_number = #{phoneNumber}
 	</select>
+
+	<select id="selectUserById" parameterType="long" resultMap="BaseResultMap">
+		select * from shr_user
+		where user_id = #{userId}
+	</select>
+
 </mapper>

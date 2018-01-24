@@ -11,19 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.share.locker.common.AppConfig;
 
 @Controller
-public class AppController extends BaseController{
+public class AppController extends BaseController {
 	private final static Logger logger = LoggerFactory.getLogger(AppController.class);
-	
+
 	/**
 	 * 获取系统配置信息
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/getAppConfig.json")
-	public Object getAppConfig(HttpServletRequest request,HttpServletResponse response) throws Exception {
-		//TODO 获取AppConfig
+	public Object getAppConfig(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// TODO 获取AppConfig
 		AppConfig appConfig = new AppConfig();
 		appConfig.setPassworkMD5Key("SSHHAARREE_LLOOCCKKEERR");
 		writeJsonMsg(response, true, appConfig);

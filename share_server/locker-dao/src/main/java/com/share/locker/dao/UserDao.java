@@ -6,4 +6,6 @@ public interface UserDao {
 	UserBO selectUserByEmail(String email);
 
 	UserBO selectUserByPhoneNumber(String phoneNumber);
+
+	UserBO selectUserById(Long userId);
 }

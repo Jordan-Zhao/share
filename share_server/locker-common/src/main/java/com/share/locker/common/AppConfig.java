@@ -10,5 +10,5 @@ public class AppConfig {
 	public void setPassworkMD5Key(String passworkMD5Key) {
 		this.passworkMD5Key = passworkMD5Key;
 	}
-	
+
 }

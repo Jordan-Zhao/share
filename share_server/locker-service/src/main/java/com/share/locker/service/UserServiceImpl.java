@@ -19,4 +19,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public UserBO getUserByPhoneNumber(String phoneNumber) {
 		return userDao.selectUserByPhoneNumber(phoneNumber);
 	}
+
+	public UserBO getUserById(Long userId) {
+		return userDao.selectUserById(userId);
+	}
 }

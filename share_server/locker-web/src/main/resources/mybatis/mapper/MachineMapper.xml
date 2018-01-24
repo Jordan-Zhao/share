@@ -6,6 +6,7 @@
 	<!-- bo对象和table字段对应 -->
 	<resultMap id="BaseResultMap" type="com.share.locker.bo.MachineBO">
 		<result column="machine_id" property="machineId" />
+		<result column="name" property="name" />
 		<result column="location" property="location" />
 		<result column="create_time" property="createTime" />
 		<result column="edit_time" property="editTime" />
@@ -13,4 +14,8 @@
 		<result column="status" property="status" />
 	</resultMap>
 
+	<select id="selectMachineById" parameterType="long" resultMap="BaseResultMap">
+		select * from shr_machine
+		where machine_id = #{machine_id}
+	</select>
 </mapper>

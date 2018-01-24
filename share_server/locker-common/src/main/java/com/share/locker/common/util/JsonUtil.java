@@ -14,8 +14,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
-
-
 public class JsonUtil {
 
 	/** The Constant LOG. */
@@ -25,21 +23,21 @@ public class JsonUtil {
 	 * json�����ַ���ת����list
 	 * 
 	 */
-	public static List jsonArraytoObject(String jsonArray,Class c) {
-		if(StringUtil.isEmpty(jsonArray)){
-			log.warn("jsonArraytoObject error.json:{};c:{}",jsonArray,c);
+	public static List jsonArraytoObject(String jsonArray, Class c) {
+		if (StringUtil.isEmpty(jsonArray)) {
+			log.warn("jsonArraytoObject error.json:{};c:{}", jsonArray, c);
 			return null;
 		}
 		List rs = new ArrayList();
 		JSONArray arr = JSONArray.fromObject(jsonArray);
-		for(int i = 0;i < arr.size(); i++){
+		for (int i = 0; i < arr.size(); i++) {
 			rs.add(JSONObject.toBean(arr.getJSONObject(i), c));
 		}
 		return rs;
 	}
-	
-	public static String toJson(Object obj){
-		if(obj == null){
+
+	public static String toJson(Object obj) {
+		if (obj == null) {
 			return null;
 		}
 		StringWriter out = new StringWriter();
@@ -52,24 +50,24 @@ public class JsonUtil {
 		}
 		return out.toString();
 	}
-	
-	public static Object getObject(String json,Class cls){
+
+	public static Object getObject(String json, Class cls) {
 		JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(json);
-        return  JSONObject.toBean(jsonObject,cls); 
-	}
-	
-	public static Object getObject(String json,Class cls,Map map){
-		JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(json);
-        return  JSONObject.toBean(jsonObject,cls,map); 
+		return JSONObject.toBean(jsonObject, cls);
 	}
 
-	public static void main(String[] arg){
-		/*Map<String, Object> map = new HashMap<String, Object>();
-		map.put("1", 23);
-		map.put("data",new ArrayList());
-		System.out.println(toJson(map));*/
-		
-		//=====================================
+	public static Object getObject(String json, Class cls, Map map) {
+		JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(json);
+		return JSONObject.toBean(jsonObject, cls, map);
+	}
+
+	public static void main(String[] arg) {
+		/*
+		 * Map<String, Object> map = new HashMap<String, Object>(); map.put("1", 23);
+		 * map.put("data",new ArrayList()); System.out.println(toJson(map));
+		 */
+
+		// =====================================
 		User user = new User();
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("isSuccess", true);
@@ -77,8 +75,8 @@ public class JsonUtil {
 		map2.put("data", user);
 		System.out.println(toJson(map2));
 	}
-	
-	static class User{
+
+	static class User {
 		public int id = 1001;
 		public String name = "jordan";
 	}

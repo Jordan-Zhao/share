@@ -3,6 +3,8 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.locker.dao.OrderDao">
 
+	<parameterMap type="com.share.locker.bo.OrderBO" id="OrderParamMap"></parameterMap>
+	
 	<!-- bo对象和table字段对应 -->
 	<resultMap id="BaseResultMap" type="com.share.locker.bo.OrderBO">
 		<result column="order_id" property="orderId" />
@@ -21,5 +23,15 @@
 		<result column="editor" property="editor" />
 		<result column="status" property="status" />
 	</resultMap>
-
+	
+	<!-- 下单 -->
+	<insert id="saveOrder" parameterMap="OrderParamMap" useGeneratedKeys="true">
+		<selectKey resultType="long" keyProperty="orderId" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO shr_order (item_id,owner_id,renter_id,deposit,title,take_time,fee,return_locker_id,return_time,
+			check_time,create_time,edit_time, editor, status)
+		VALUES (#{itemId}, #{ownerId}, #{renterId}, #{deposit}, #{title},
+			#{takeTime}, #{fee}, #{returnLockerId},#{returnTime},#{checkTime}, now(), now(), #{editor}, #{status})
+	</insert>
 </mapper>

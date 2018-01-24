@@ -8,17 +8,18 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class StringUtil {
-	
+
 	/**
 	 * 判断字符串是不是邮箱
+	 * 
 	 * @param userName
 	 * @return
 	 */
 	public static boolean isEmail(String userName) {
-		//TODO 优化
+		// TODO 优化
 		return userName.contains("@");
 	}
-	
+
 	/**
 	 * ������ɹ̶����ȵ��ַ���
 	 * 
@@ -130,8 +131,8 @@ public class StringUtil {
 		}
 		return String.valueOf(obj);
 	}
-	
-	public static Object toObject(String json,Class c){
+
+	public static Object toObject(String json, Class c) {
 		return JSONObject.toBean(JSONObject.fromObject(json), c);
 	}
 
@@ -146,16 +147,16 @@ public class StringUtil {
 		}
 		return false;
 	}
-	
-	public static String contactStrings(List<String> list,String separator){
-		if(CollectionUtil.isEmptyArray(list)){
+
+	public static String contactStrings(List<String> list, String separator) {
+		if (CollectionUtil.isEmptyArray(list)) {
 			return null;
 		}
 		StringBuilder sBuilder = new StringBuilder();
-		for(String s : list){
+		for (String s : list) {
 			sBuilder.append(s).append(separator);
 		}
-		return sBuilder.toString().substring(0,sBuilder.toString().length() - 1);
+		return sBuilder.toString().substring(0, sBuilder.toString().length() - 1);
 	}
 
 	public static void main(String[] arg) {

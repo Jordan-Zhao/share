@@ -6,4 +6,6 @@ public interface UserService {
 	UserBO getUserByEmail(String email);
 
 	UserBO getUserByPhoneNumber(String phoneNumber);
+
+	UserBO getUserById(Long userId);
 }

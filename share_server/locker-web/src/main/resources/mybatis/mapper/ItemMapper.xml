@@ -5,7 +5,7 @@
 
 	<parameterMap type="com.share.locker.bo.ItemBO" id="ItemParamMap"></parameterMap>
 	<parameterMap type="com.share.locker.bo.ItemImgBO" id="ItemImgParamMap"></parameterMap>
-	
+
 	<!-- bo对象和table字段对应 -->
 	<resultMap id="BaseResultMap" type="com.share.locker.bo.ItemBO">
 		<result column="item_id" property="itemId" />
@@ -18,6 +18,7 @@
 		<result column="locker_size_code" property="lockerSizeCode" />
 		<result column="locker_id" property="lockerId" />
 		<result column="publish_status" property="publishStatus" />
+		<result column="description" property="description" />
 		<result column="create_time" property="createTime" />
 		<result column="edit_time" property="editTime" />
 		<result column="editor" property="editor" />
@@ -37,53 +38,43 @@
 	</resultMap>
 
 	<!-- TODO MOCK -->
-	<select id="selectItemTop10" parameterType="java.util.List"
-		resultMap="BaseResultMap">
+	<select id="selectItemTop10" parameterType="java.util.List" resultMap="BaseResultMap">
 		select * from shr_item
 		where status in
-		<foreach collection="list" index="index" item="item" open="("
-			separator="," close=")">
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
+		order by item_id desc
+		limit 10
 	</select>
-	
-	
+
+
 	<!-- 查询单条记录 -->
-	<select id="selectItemByIdList" parameterType="java.util.List"
-		resultMap="BaseResultMap">
+	<select id="selectItemById" parameterType="long" resultMap="BaseResultMap">
 		select * from shr_item
-		where item_id in
-		<foreach collection="list" index="index" item="item" open="("
-			separator="," close=")">
-			#{item}
-		</foreach>
+		where item_id = #{itemId}
 	</select>
 
 	<!-- 发布宝贝 -->
-	<insert id="saveItem" parameterMap="ItemParamMap"
-		useGeneratedKeys="true">
+	<insert id="saveItem" parameterMap="ItemParamMap" useGeneratedKeys="true">
 		<selectKey resultType="long" keyProperty="itemId" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO shr_item (user_id, title, price_time_unit, price_time,
-		price, deposit, locker_size_code,
-		locker_id, publish_status, create_time, edit_time, editor, status)
+			price, deposit, locker_size_code,locker_id, publish_status, description,create_time,edit_time, editor, status)
 		VALUES (#{userId}, #{title}, #{priceTimeUnit}, #{priceTime}, #{price},
-		#{deposit}, #{lockerSizeCode}, #{lockerId},
-		#{publishStatus}, now(), now(), #{editor}, #{status})
+			#{deposit}, #{lockerSizeCode}, #{lockerId},#{publishStatus},#{description}, now(), now(), #{editor}, #{status})
 	</insert>
 
 	<!-- 保存宝贝的图片URL -->
-	<insert id="saveItemImg" parameterType="java.util.List"
-		useGeneratedKeys="true">
+	<insert id="saveItemImg" parameterType="java.util.List" useGeneratedKeys="true">
 		<selectKey resultType="long" keyProperty="id" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO shr_item_img (item_id, img_size_code, url, create_time,
 		edit_time, editor, status)
 		values
-		<foreach collection="list" item="itemImg" index="index"
-			separator=",">
+		<foreach collection="list" item="itemImg" index="index" separator=",">
 			(#{itemImg.itemId}, #{itemImg.imgSizeCode}, #{itemImg.url},now(), now(),
 			#{itemImg.editor}, #{itemImg.status})
 		</foreach>
@@ -94,8 +85,7 @@
 		select * from shr_item
 		where user_id = #{userId}
 		and status in
-		<foreach collection="statusList" index="index" item="item" 
-			open="(" separator="," close=")">
+		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
@@ -104,19 +94,23 @@
 	<select id="getImgByItemIdList" parameterType="map" resultMap="ItemImgResultMap">
 		select * from shr_item_img
 		where item_id in
-		<foreach collection="itemIdList" index="index" item="item"
-			open="(" separator="," close=")">
+		<foreach collection="itemIdList" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 		and status in
-		<foreach collection="statusList" index="index" item="item"
-			open="(" separator="," close=")">
+		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 		<if test="imgSizeCode != null">
 			and img_size_code = #{imgSizeCode}
 		</if>
 	</select>
+	
+	<update id="updateItemStatus" parameterType="map">
+		update shr_item 
+		set status = #{status}
+		where item_id = #{itemId} 
+	</update> 
 
 
 </mapper>
