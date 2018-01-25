@@ -1,83 +1,60 @@
 package com.share.locker.common.util;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class JsonUtil {
 
 	/** The Constant LOG. */
 	private static final Logger log = LoggerFactory.getLogger(JsonUtil.class);
-
-	/**
-	 * json�����ַ���ת����list
-	 * 
-	 */
-	public static List jsonArraytoObject(String jsonArray, Class c) {
-		if (StringUtil.isEmpty(jsonArray)) {
-			log.warn("jsonArraytoObject error.json:{};c:{}", jsonArray, c);
-			return null;
-		}
-		List rs = new ArrayList();
-		JSONArray arr = JSONArray.fromObject(jsonArray);
-		for (int i = 0; i < arr.size(); i++) {
-			rs.add(JSONObject.toBean(arr.getJSONObject(i), c));
-		}
-		return rs;
-	}
-
+	
 	public static String toJson(Object obj) {
-		if (obj == null) {
-			return null;
-		}
-		StringWriter out = new StringWriter();
-		try {
-			ObjectMapper oMapper = new ObjectMapper();
-			oMapper.writeValue(out, obj);
-		} catch (Exception e) {
-			log.error("toJson.error={}", obj);
-			throw new RuntimeException("toJson.exception:" + obj, e);
-		}
-		return out.toString();
+		Gson gson = new Gson();
+		return gson.toJson(obj);
 	}
+	 /**
+     * json 转 map
+     *
+     * @param jsonStr
+     * @return
+     */
+    public static HashMap json2Map(String jsonStr) {
+        Gson gson = new Gson();
+        HashMap hashMap = gson.fromJson(jsonStr, HashMap.class);
+        return hashMap;
+    }
 
-	public static Object getObject(String json, Class cls) {
-		JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(json);
-		return JSONObject.toBean(jsonObject, cls);
-	}
+    /**
+     * json 转 Object
+     *
+     * @param jsonStr
+     * @return
+     */
+    public static Object json2Object(String jsonStr,Class c) {
+        Gson gson = new Gson();
+        return gson.fromJson(jsonStr, c);
+    }
 
-	public static Object getObject(String json, Class cls, Map map) {
-		JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(json);
-		return JSONObject.toBean(jsonObject, cls, map);
-	}
-
-	public static void main(String[] arg) {
-		/*
-		 * Map<String, Object> map = new HashMap<String, Object>(); map.put("1", 23);
-		 * map.put("data",new ArrayList()); System.out.println(toJson(map));
-		 */
-
-		// =====================================
-		User user = new User();
-		Map<String, Object> map2 = new HashMap<>();
-		map2.put("isSuccess", true);
-		map2.put("msg", null);
-		map2.put("data", user);
-		System.out.println(toJson(map2));
-	}
-
-	static class User {
-		public int id = 1001;
-		public String name = "jordan";
-	}
+    /**
+     * json 转 list
+     *
+     * @param jsonStr
+     * @param typeToken  list中的类构建的TypeToken
+     * @return
+     */
+    public static List json2List(String jsonStr,TypeToken typeToken) {
+        Gson gson = new Gson();
+        return gson.fromJson(jsonStr, typeToken.getType());
+    }
+    /*
+    public static void main(String[] arg) {
+    	String json = "[{\"imgUrl\":\"http://192.168.0.104:8080/locker/banner1.png\",\"itemId\":46}]";
+    	List list = json2List(json, new TypeToken<BannerDTO>() {}) ;  			
+    }*/
 }

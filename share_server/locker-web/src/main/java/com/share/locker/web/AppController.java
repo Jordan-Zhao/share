@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.share.locker.common.AppConfig;
 
@@ -22,7 +23,7 @@ public class AppController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/getAppConfig.json")
+	@RequestMapping(value = "/app/getAppConfig.json", method = RequestMethod.POST)
 	public Object getAppConfig(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO 获取AppConfig
 		AppConfig appConfig = new AppConfig();

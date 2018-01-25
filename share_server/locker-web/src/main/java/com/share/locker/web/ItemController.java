@@ -54,7 +54,7 @@ public class ItemController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/getHotItemList.json")
+	@RequestMapping("/item/getHotItemList.json")
 	public Object getHotItemList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<ItemBO> itemBOList = itemService.getHotItemList();
 		List<Map<String, Object>> hotItemList = convertHotItemList(itemBOList);
@@ -70,7 +70,7 @@ public class ItemController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/publishItem.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/item/publishItem.json", method = RequestMethod.POST)
 	public Object publishItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// 初始化文件上传对象
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -122,9 +122,9 @@ public class ItemController extends BaseController {
 				} else if ("priceTime".equals(fieldName)) {
 					itemBO.setPriceTime(Integer.parseInt(fieldValue));
 				} else if ("price".equals(fieldName)) {
-					itemBO.setPrice(Integer.parseInt(fieldValue));
+					itemBO.setPrice(BizUtil.convertInputPrice2Int(fieldValue));
 				} else if ("deposit".equals(fieldName)) {
-					itemBO.setDeposit(Integer.parseInt(fieldValue));
+					itemBO.setDeposit(BizUtil.convertInputPrice2Int(fieldValue));
 				} else if ("lockerSize".equals(fieldName)) {
 					itemBO.setLockerSizeCode(fieldValue);
 				} else if ("lockerId".equals(fieldName)) {
@@ -149,7 +149,7 @@ public class ItemController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getItemDetail.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/item/getItemDetail.json", method = RequestMethod.POST)
 	public Object getItemDetail(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long itemId = Long.parseLong(request.getParameter("itemId"));
 
@@ -186,7 +186,7 @@ public class ItemController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/onLineItem.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/item/onLineItem.json", method = RequestMethod.POST)
 	public Object onLineItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long itemId = Long.parseLong(request.getParameter("itemId"));
 		// TODO 校验是否本人操作、是否可上架
@@ -203,7 +203,7 @@ public class ItemController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/offLineItem.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/item/offLineItem.json", method = RequestMethod.POST)
 	public Object offLineItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long itemId = Long.parseLong(request.getParameter("itemId"));
 		// TODO 校验是否本人操作、是否可上架
@@ -220,7 +220,7 @@ public class ItemController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/deleteItem.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/item/deleteItem.json", method = RequestMethod.POST)
 	public Object deleteItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long itemId = Long.parseLong(request.getParameter("itemId"));
 		// TODO 校验是否本人操作、是否可上架

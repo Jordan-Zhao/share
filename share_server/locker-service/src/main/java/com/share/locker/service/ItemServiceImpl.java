@@ -21,7 +21,11 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 
 	public List<ItemBO> getHotItemList() {
 		// TODO 先mock取前10条数据
-		return itemDao.selectItemTop10(LockerConstants.MY_ITEM_STATUS_LIST);
+		List<ItemBO> itemList = itemDao.selectItemTop10(LockerConstants.MY_ITEM_STATUS_LIST);
+		// 获取img信息
+		addImgList(itemList, LockerConstants.ImgSizeCode.SMALL);
+		
+		return itemList;
 	}
 
 	public Long publishItem(ItemBO itemBO, Map<String, List<String>> imgUrlListMap) {
@@ -53,33 +57,7 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		List<ItemBO> itemList = itemDao.getItemByUserId(paramMap);
 
 		// 获取img信息
-		if (CollectionUtils.isNotEmpty(itemList)) {
-			List<Long> itemIdList = new ArrayList<>();
-			for (ItemBO itemBO : itemList) {
-				itemIdList.add(itemBO.getItemId());
-			}
-			List<String> imgStatusList = new ArrayList<>();
-			imgStatusList.add(LockerConstants.BaseDataStatus.VALID.getCode());
-
-			Map<String, Object> paramMap1 = new HashMap<>();
-			paramMap1.put("itemIdList", itemIdList);
-			paramMap1.put("statusList", imgStatusList);
-			paramMap1.put("imgSizeCode", LockerConstants.ImgSizeCode.SMALL.getSizeCode());
-			List<ItemImgBO> imgList = itemDao.getImgByItemIdList(paramMap1);
-
-			if (CollectionUtils.isNotEmpty(imgList)) {
-				for (ItemImgBO imgBO : imgList) {
-					for (ItemBO itemBO : itemList) {
-						if (imgBO.getItemId().equals(itemBO.getItemId())) {
-							if (CollectionUtils.isEmpty(itemBO.getSmallImgList())) {
-								itemBO.setSmallImgList(new ArrayList<>());
-							}
-							itemBO.getSmallImgList().add(imgBO);
-						}
-					}
-				}
-			}
-		}
+		addImgList(itemList, LockerConstants.ImgSizeCode.SMALL);
 
 		return itemList;
 	}
@@ -120,5 +98,44 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		paramMap.put("itemId", itemId);
 		paramMap.put("status", LockerConstants.ItemStatus.DELETED.getCode());
 		itemDao.updateItemStatus(paramMap);
+	}
+	
+	// 获取img信息
+	private void addImgList(List<ItemBO> itemList,LockerConstants.ImgSizeCode imgSizeCode) {
+		if (CollectionUtils.isNotEmpty(itemList)) {
+			List<Long> itemIdList = new ArrayList<>();
+			for (ItemBO itemBO : itemList) {
+				itemIdList.add(itemBO.getItemId());
+			}
+			List<String> imgStatusList = new ArrayList<>();
+			imgStatusList.add(LockerConstants.BaseDataStatus.VALID.getCode());
+
+			Map<String, Object> paramMap1 = new HashMap<>();
+			paramMap1.put("itemIdList", itemIdList);
+			paramMap1.put("statusList", imgStatusList);
+			paramMap1.put("imgSizeCode", imgSizeCode.getSizeCode());
+			List<ItemImgBO> imgList = itemDao.getImgByItemIdList(paramMap1);
+
+			if (CollectionUtils.isNotEmpty(imgList)) {
+				for (ItemImgBO imgBO : imgList) {
+					for (ItemBO itemBO : itemList) {
+						if (imgBO.getItemId().equals(itemBO.getItemId())) {
+							if (CollectionUtils.isEmpty(itemBO.getSmallImgList())) {
+								if(imgSizeCode.getSizeCode().equals(LockerConstants.ImgSizeCode.SMALL.getSizeCode())) {
+									itemBO.setSmallImgList(new ArrayList<>());
+								}else {
+									itemBO.setNormalImgList(new ArrayList<>());
+								}
+							}
+							if(imgSizeCode.getSizeCode().equals(LockerConstants.ImgSizeCode.SMALL.getSizeCode())) {
+								itemBO.getSmallImgList().add(imgBO);
+							}else {
+								itemBO.getNormalImgList().add(imgBO);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

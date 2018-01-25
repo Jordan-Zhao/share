@@ -29,7 +29,7 @@ public class OrderController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rent.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/order/rent.json", method = RequestMethod.POST)
 	public Object onLineItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long itemId = Long.parseLong(request.getParameter("itemId"));
 		UserBO loginUser = BizUtil.getLoginUser(request);

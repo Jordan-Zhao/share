@@ -42,7 +42,7 @@ public class UserController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/login.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/mine/login.json", method = RequestMethod.POST)
 	public Object login(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
@@ -70,7 +70,7 @@ public class UserController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getMineData.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/mine/getMineData.json", method = RequestMethod.POST)
 	public Object getMineData(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
@@ -103,7 +103,7 @@ public class UserController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/getMyPublishItems.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/mine/getMyPublishItems.json", method = RequestMethod.POST)
 	public Object publishItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		UserBO loginUser = BizUtil.getLoginUser(request);
 		List<ItemBO> itemList = itemService.getItemByUserId(loginUser.getUserId(), LockerConstants.MY_ITEM_STATUS_LIST);
