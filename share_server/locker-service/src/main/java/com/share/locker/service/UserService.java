@@ -8,4 +8,6 @@ public interface UserService {
 	UserBO getUserByPhoneNumber(String phoneNumber);
 
 	UserBO getUserById(Long userId);
+	
+	UserBO register(UserBO userBO);
 }

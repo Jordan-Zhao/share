@@ -25,6 +25,7 @@ import com.share.locker.common.util.JsonUtil;
 import com.share.locker.service.ItemService;
 import com.share.locker.service.OperationService;
 import com.share.locker.service.util.BizUtil;
+import com.share.locker.service.util.MockUtil;
 import com.share.locker.web.dto.BannerDTO;
 import com.share.locker.web.dto.HotItemDTO;
 import com.share.locker.web.dto.OperationSettingDTO;
@@ -62,7 +63,7 @@ public class OperationController extends BaseController {
 		operationSettingDTO.setHotItemDTOList(hotItemList);
 
 		writeJsonMsg(response, true, operationSettingDTO);
-		return null;
+		return null; 
 	}
 
 	private List<HotItemDTO> convertHotItemList(List<ItemBO> itemBOList) {
@@ -77,7 +78,7 @@ public class OperationController extends BaseController {
 			dto.setTitle(itemBO.getTitle());
 			dto.setDeposit(BizUtil.convertDbPrice2Float(itemBO.getDeposit()));
 			dto.setPriceTxt(BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
-			dto.setCommentCount(LockerConstants.MOCK_COMMENT_NUMBER);
+			dto.setCommentCount(MockUtil.MOCK_COMMENT_NUMBER);
 			resultList.add(dto);
 		}
 		return resultList;

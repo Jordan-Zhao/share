@@ -8,4 +8,6 @@ public interface UserDao {
 	UserBO selectUserByPhoneNumber(String phoneNumber);
 
 	UserBO selectUserById(Long userId);
+	
+	void insertUser(UserBO userBO);
 }

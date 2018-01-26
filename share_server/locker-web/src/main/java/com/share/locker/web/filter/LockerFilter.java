@@ -47,10 +47,10 @@ public class LockerFilter implements Filter {
 			UserBO loginUser = null;
 			UserService userService = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext())
 					.getBean(UserService.class);
-			if (StringUtil.isEmail(userName)) {
-				loginUser = userService.getUserByEmail(userName);
-			} else {
+			if (StringUtil.isPhoneNumber(userName)) {
 				loginUser = userService.getUserByPhoneNumber(userName);
+			} else {
+				loginUser = userService.getUserByEmail(userName);
 			}
 			if (loginUser != null) {
 				request.setAttribute(LockerConstants.KEY_REQUEST_LOGIN_USER, loginUser);

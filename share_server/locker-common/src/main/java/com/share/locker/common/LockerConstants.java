@@ -7,15 +7,6 @@ public class LockerConstants {
 	public final static String OPERATION_BANNER = "OPERATION_BANNER"; // banner图片配置code
 	public final static String OPERATION_CENTER = "OPERATION_CENTER"; // 首页中间位置配置code
 
-	public final static String MOCK_URL_BASE = "http://192.168.0.104:8080/locker/";
-
-	/*
-	 * public final static String MOCK_URL_BASE =
-	 * "http://192.168.2.195:8080/locker/";
-	 */
-
-	public final static Integer MOCK_COMMENT_NUMBER = 99;
-
 	public final static String KEY_REQUEST_LOGIN_USER = "loginUser";
 
 	// item对应的图片尺寸大小编码
@@ -165,6 +156,45 @@ public class LockerConstants {
 		private String name;
 
 		OrderStatus(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+	
+	public final static String EDITOR_SYSTEM="EDITOR_SYSTEM";//默认数据修改人
+	
+	public final static Long VERIFY_CODE_EXPIRE_TIME = 1000*60*10L;//验证码有效期
+	
+	/**
+	 * 用户状态
+	 * 
+	 * @author Jordan
+	 *
+	 */
+	public static enum UserStatus {
+		VALID("VALID", "正常状态"), INVALID("INVALID", "无效");
+
+		private String code;
+		private String name;
+
+		UserStatus(String code, String name) {
 			this.code = code;
 			this.name = name;
 		}

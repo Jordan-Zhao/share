@@ -8,9 +8,9 @@ package com.share.locker.bo;
  */
 public class RegisterCodeBO extends BaseBO {
 	private Long id;
-	private Long userId;
+	private String registerId;
 	private String registerCode;
-	private Integer expireTime;
+	private Long expireTime;
 
 	public Long getId() {
 		return id;
@@ -18,14 +18,6 @@ public class RegisterCodeBO extends BaseBO {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getRegisterCode() {
@@ -36,12 +28,24 @@ public class RegisterCodeBO extends BaseBO {
 		this.registerCode = registerCode;
 	}
 
-	public Integer getExpireTime() {
+	
+
+	public Long getExpireTime() {
 		return expireTime;
 	}
 
-	public void setExpireTime(Integer expireTime) {
+	public void setExpireTime(Long expireTime) {
 		this.expireTime = expireTime;
 	}
+
+	public String getRegisterId() {
+		return registerId;
+	}
+
+	public void setRegisterId(String registerId) {
+		this.registerId = registerId;
+	}
+
+	
 
 }

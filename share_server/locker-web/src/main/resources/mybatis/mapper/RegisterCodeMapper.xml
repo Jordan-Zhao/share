@@ -3,10 +3,12 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.locker.dao.RegisterCodeDao">
 
+	<parameterMap type="com.share.locker.bo.RegisterCodeBO" id="RegisterCodeParamMap"></parameterMap>
+	
 	<!-- bo对象和table字段对应 -->
 	<resultMap id="BaseResultMap" type="com.share.locker.bo.RegisterCodeBO">
 		<result column="id" property="id" />
-		<result column="user_id" property="userId" />
+		<result column="register_id" property="registerId" />
 		<result column="register_code" property="registerCode" />
 		<result column="expire_time" property="expireTime" />
 		<result column="create_time" property="createTime" />
@@ -14,5 +16,22 @@
 		<result column="editor" property="editor" />
 		<result column="status" property="status" />
 	</resultMap>
-
+	
+	<!-- 生成验证码 -->
+	<insert id="insertRegisterCode" parameterMap="RegisterCodeParamMap" useGeneratedKeys="true">
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO shr_register_code (register_id, register_code, expire_time,
+			create_time,edit_time, editor, status)
+		VALUES (#{registerId}, #{registerCode}, #{expireTime}, #{createTime}, #{editTime},#{editor}, #{status})
+	</insert>
+	
+	<select id="getRegisterCode" parameterType="map" resultMap="BaseResultMap">
+		select * from shr_register_code
+		where register_id = #{registerId}
+		and register_code = #{code}
+		and status = #{status}
+	</select>
+	
 </mapper>

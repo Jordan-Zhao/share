@@ -23,4 +23,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public UserBO getUserById(Long userId) {
 		return userDao.selectUserById(userId);
 	}
+	
+	public UserBO register(UserBO userBO) {
+		userDao.insertUser(userBO);
+		return userBO;
+	}
 }

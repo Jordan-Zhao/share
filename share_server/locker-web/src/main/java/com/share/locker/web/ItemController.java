@@ -27,10 +27,12 @@ import com.share.locker.bo.ItemBO;
 import com.share.locker.bo.ItemImgBO;
 import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
+import com.share.locker.common.util.ImageUtil;
 import com.share.locker.service.ItemService;
 import com.share.locker.service.LockerService;
 import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
+import com.share.locker.service.util.MockUtil;
 import com.share.locker.web.dto.ItemDetailDTO;
 
 @Controller
@@ -162,7 +164,7 @@ public class ItemController extends BaseController {
 				BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
 		detailDTO.setDeposit(BizUtil.convertDbPrice2Float(itemBO.getDeposit()));
 		detailDTO.setMachineName(lockerService.getLockerById(itemBO.getLockerId()).getMachineBO().getName());
-		detailDTO.setComment(LockerConstants.MOCK_COMMENT_NUMBER);
+		detailDTO.setComment(MockUtil.MOCK_COMMENT_NUMBER);
 		detailDTO.setDescription(itemBO.getDescription());
 
 		List<String> imgUrlList = new ArrayList<>();
@@ -237,7 +239,7 @@ public class ItemController extends BaseController {
 		for (ItemBO itemBO : itemBOList) {
 			Map<String, Object> itemMap = new HashMap<>();
 			itemMap.put("itemId", itemBO.getItemId());
-			itemMap.put("itemImgUrl", getRandomItemUrl()); // TODO
+			itemMap.put("itemImgUrl", itemBO.getSmallImgList().get(0));	//取第一张图片
 			itemMap.put("title", itemBO.getTitle());
 			itemMap.put("deposit", itemBO.getDeposit());
 			itemMap.put("priceStr", convertPriceStr(itemBO));
@@ -251,12 +253,6 @@ public class ItemController extends BaseController {
 		return "每天" + itemBO.getPrice(); // TODO
 	}
 
-	private String getRandomItemUrl() {
-		String[] arr = { LockerConstants.MOCK_URL_BASE + "item2.png", LockerConstants.MOCK_URL_BASE + "item3.png",
-				LockerConstants.MOCK_URL_BASE + "item4.png" };
-		return arr[new Random().nextInt(3)];
-	}
-
 	private Map<String, List<String>> saveUploadFiles(HttpServletRequest request, List<FileItem> fileItemList) {
 		Map<String, List<String>> resultMap = new HashMap<>();
 		List<String> normalFileList = new ArrayList<>();
@@ -264,8 +260,8 @@ public class ItemController extends BaseController {
 		resultMap.put(LockerConstants.ImgSizeCode.NORMAL.getSizeCode(), normalFileList);
 		resultMap.put(LockerConstants.ImgSizeCode.SMALL.getSizeCode(), smallFileList);
 
-		String smallImgFilePath = request.getSession().getServletContext().getRealPath("") + "images\\small\\";
-		String normalImgFilePath = request.getSession().getServletContext().getRealPath("") + "images\\normal\\";
+		String smallImgFilePath = MockUtil.MOCK_IMAGE_FILE_PATH + "small\\";
+		String normalImgFilePath = MockUtil.MOCK_IMAGE_FILE_PATH + "normal\\";
 
 		Iterator<FileItem> iterator = fileItemList.iterator();
 		while (iterator.hasNext()) {
@@ -276,16 +272,15 @@ public class ItemController extends BaseController {
 			if (name == null || "".equals(name) && "0".equals(fileSize))
 				continue;
 			int delimiter = name.lastIndexOf("\\");
-			String simpleFileName = (delimiter == -1) ? name : name.substring(delimiter + 1);
+			String simpleFileName = "image_"+System.currentTimeMillis()+"_"+((delimiter == -1) ? name : name.substring(delimiter + 1));
 			try {
-				// save normal file
+				//保存正常图片
 				File normalFile = new File(normalImgFilePath, simpleFileName);
 				formitem.write(normalFile);
-				normalFileList.add(LockerConstants.MOCK_URL_BASE + "images/normal/" + simpleFileName);
-				// save small file
-				File smallFile = new File(smallImgFilePath, simpleFileName);
-				formitem.write(smallFile); // TODO 裁剪图片
-				smallFileList.add(LockerConstants.MOCK_URL_BASE + "images/small/" + simpleFileName);
+				normalFileList.add(MockUtil.MOCK_URL_IMAGE + "normal/" + simpleFileName);
+				//生成200的小图片
+				ImageUtil.zoomByWidthAndSave(normalImgFilePath+simpleFileName, 200, smallImgFilePath+simpleFileName);
+				smallFileList.add(MockUtil.MOCK_URL_IMAGE + "small/" + simpleFileName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
