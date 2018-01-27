@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.share.locker.bo.ItemBO;
-import com.share.locker.bo.RegisterCodeBO;
+import com.share.locker.bo.CheckCodeBO;
 import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.common.util.StringUtil;
 import com.share.locker.service.ItemService;
-import com.share.locker.service.RegisterCodeService;
+import com.share.locker.service.CheckCodeService;
 import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
 import com.share.locker.service.util.MockUtil;
@@ -40,7 +40,7 @@ public class UserController extends BaseController {
 	@Autowired
 	private ItemService itemService;
 	@Autowired
-	private RegisterCodeService registerCodeService;
+	private CheckCodeService checkCodeService;
 
 	/**
 	 * 登录
@@ -143,17 +143,10 @@ public class UserController extends BaseController {
 			return null;
 		}
 		
-		RegisterCodeBO codeBO = new RegisterCodeBO();
-		codeBO.setRegisterCode(String.valueOf(new Random().nextInt(999999)));
-		codeBO.setCreateTime(new Date());
-		codeBO.setEditor(LockerConstants.EDITOR_SYSTEM);
-		codeBO.setEditTime(new Date());
-		codeBO.setExpireTime(LockerConstants.VERIFY_CODE_EXPIRE_TIME); // 10分钟
-		codeBO.setStatus(LockerConstants.BaseDataStatus.VALID.toString());
-		codeBO.setRegisterId(phoneNumber.trim());
-		registerCodeService.createRegisterCode(codeBO);
+		//生成二维码
+		String code = checkCodeService.createCheckCode(LockerConstants.CheckCodeType.USER_REGISTER.getCode(), phoneNumber);
 		
-		writeJsonMsg(response, true, codeBO.getRegisterCode());
+		writeJsonMsg(response, true, code);
 		return null;
 	}
 	
@@ -171,11 +164,11 @@ public class UserController extends BaseController {
 		String verifyCode = request.getParameter("verifyCode").trim();
 		
 		//校验验证码
-		RegisterCodeBO codeBO = registerCodeService.getRegisterCode(phoneNumber, verifyCode);
-		if(System.currentTimeMillis() > (codeBO.getCreateTime().getTime()+codeBO.getExpireTime()) ) {
-			writeJsonMsg(response, false, "验证码已过期");
+		if(!checkCodeService.isCodeValid(LockerConstants.CheckCodeType.USER_REGISTER.getCode(), phoneNumber, verifyCode)) {
+			writeJsonMsg(response, false, "验证码无效");
 		}
 		
+		//创建哟用户
 		UserBO userBO = new UserBO();
 		userBO.setPhoneCountry(86);
 		userBO.setPhoneNumber(phoneNumber);

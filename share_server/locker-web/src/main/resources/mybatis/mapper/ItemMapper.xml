@@ -101,7 +101,7 @@
 		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
-		<if test="imgSizeCode != null">
+		<if test="imgSizeCode != null and imgSizeCode != ''">
 			and img_size_code = #{imgSizeCode}
 		</if>
 	</select>
@@ -111,6 +111,14 @@
 		set status = #{status}
 		where item_id = #{itemId} 
 	</update> 
+	
+	<!-- 根据lockerId查询创建状态的宝贝，只有一条数据 -->
+	<select id="getToPutItem" parameterType="map" resultMap="BaseResultMap">
+		select * from shr_item
+		where locker_id = #{lockerId}
+		and status = #{status}
+	</select>
+	
 
 
 </mapper>

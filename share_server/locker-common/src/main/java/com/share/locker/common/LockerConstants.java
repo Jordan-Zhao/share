@@ -180,7 +180,9 @@ public class LockerConstants {
 	
 	public final static String EDITOR_SYSTEM="EDITOR_SYSTEM";//默认数据修改人
 	
-	public final static Long VERIFY_CODE_EXPIRE_TIME = 1000*60*10L;//验证码有效期
+	public final static Long VERIFY_CODE_EXPIRE_TIME = 1000*60*10L;//验证码有效期,10分钟
+	
+	public final static Long QR_CODE_EXPIRE_TIME = 1000*60*60L;//验证码有效期，一个小时
 	
 	/**
 	 * 用户状态
@@ -195,6 +197,40 @@ public class LockerConstants {
 		private String name;
 
 		UserStatus(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+
+	/**
+	 * CheckCode 类型
+	 * @author Jordan
+	 *
+	 */
+	public static enum CheckCodeType {
+		USER_REGISTER("USER_REGISTER","注册码"),PUT("PUT", "存件二维码"), TAKE("TAKE", "取件二维码");
+
+		private String code;
+		private String name;
+
+		CheckCodeType(String code, String name) {
 			this.code = code;
 			this.name = name;
 		}

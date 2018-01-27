@@ -199,6 +199,19 @@ public class StringUtil {
 		}
 		return sBuilder.toString().substring(0, sBuilder.toString().length() - 1);
 	}
+	
+	/**
+	 * 随机返回6位数字字符串
+	 * @return
+	 */
+	public static String getRandomNumberString() {
+		String numberStr = String.valueOf(new Random().nextInt(999999));
+		int n = 6 - numberStr.length();
+		for(int i =0;i<n;i++) {
+			numberStr = "0"+numberStr;
+		}
+		return numberStr;
+	}
 
 	public static void main(String[] arg) {
 	/*	List<String> list = new ArrayList<String>();

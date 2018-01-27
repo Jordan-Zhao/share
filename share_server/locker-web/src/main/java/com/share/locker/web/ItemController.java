@@ -23,17 +23,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.share.locker.bo.CheckCodeBO;
 import com.share.locker.bo.ItemBO;
 import com.share.locker.bo.ItemImgBO;
 import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.common.util.ImageUtil;
+import com.share.locker.service.CheckCodeService;
 import com.share.locker.service.ItemService;
 import com.share.locker.service.LockerService;
 import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
 import com.share.locker.service.util.MockUtil;
 import com.share.locker.web.dto.ItemDetailDTO;
+import com.sun.mail.imap.protocol.Item;
 
 @Controller
 public class ItemController extends BaseController {
@@ -47,7 +50,10 @@ public class ItemController extends BaseController {
 
 	@Resource
 	private LockerService lockerService;
-
+	
+	@Resource
+	private CheckCodeService checkCodeService;
+	
 	/**
 	 * 获取主页需要显示的运营配置信息
 	 * 
@@ -139,7 +145,16 @@ public class ItemController extends BaseController {
 			}
 		}
 		itemId = itemService.publishItem(itemBO, savedFileUrlList);
-		writeJsonMsg(response, true, itemId);
+		
+		//生成存件二维码
+		String code = checkCodeService.createCheckCode(LockerConstants.CheckCodeType.PUT.getCode(), String.valueOf(itemId));
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("itemId", String.valueOf(itemId));
+		map.put("qrcode", code);
+		map.put("lockerId", String.valueOf(itemBO.getLockerId()));
+		map.put("machineName", MockUtil.getMachineNameBylockerId(itemBO.getLockerId()));
+		writeJsonMsg(response, true, map);	
 		return null;
 	}
 
@@ -230,6 +245,57 @@ public class ItemController extends BaseController {
 		writeJsonMsg(response, true, "删除成功");
 		return null;
 	}
+	
+	/**
+	 * 机柜发来请求，判断是否可以开柜
+	 * @param request	机柜传过来：lockerId（保存在机柜中）、qrcode(用户手机扫码)
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/item/openLockerForPut.json", method = RequestMethod.POST)
+	public Object openLockerForPut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long lockerId = Long.parseLong(request.getParameter("lockerId"));
+		String qrcode = request.getParameter("qrcode");
+		
+		//判断机柜和二维码是否匹配
+		List<CheckCodeBO> codeBOList = checkCodeService.getValidCheckCodeByCode(LockerConstants.CheckCodeType.PUT.getCode(), qrcode);
+		if(CollectionUtils.isNotEmpty(codeBOList)) {
+			for(CheckCodeBO codeBO : codeBOList) {
+				Long itemId = Long.parseLong(codeBO.getCheckId());	//宝贝ID，生成code时作为checkId存入的
+				ItemBO itemBO = itemService.getItemDetail(itemId);
+				if(itemBO.getLockerId().equals(lockerId)) {	//lockerId匹配，则认为可以开门
+					writeJsonMsg(response, true, true);
+					return null;
+				}
+			}
+		}
+		
+		writeJsonMsg(response, true, false);
+		return null;
+	}
+	
+	/**
+	 * 机柜发来请求，告知柜门已放入宝贝
+	 * @param request	机柜传过来：lockerId（保存在机柜中）
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/item/closeLockerAfterPut.json", method = RequestMethod.POST)
+	public Object closeLockerAfterPut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long lockerId = Long.parseLong(request.getParameter("lockerId"));
+		
+		//查询lockerId对应的“CREATED"状态的宝贝
+		ItemBO itemBO = itemService.getToPutItem(lockerId);
+		
+		//更新宝贝状态为“上架”
+		itemService.onLineItem(itemBO.getItemId());
+		
+		writeJsonMsg(response, true, true);
+		return null;
+	}
+	
 
 	private List<Map<String, Object>> convertHotItemList(List<ItemBO> itemBOList) {
 		List<Map<String, Object>> resultList = new ArrayList<>();

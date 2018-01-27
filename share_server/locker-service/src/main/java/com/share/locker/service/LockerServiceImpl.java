@@ -7,6 +7,7 @@ import com.share.locker.bo.LockerBO;
 import com.share.locker.bo.MachineBO;
 import com.share.locker.dao.LockerDao;
 import com.share.locker.dao.MachineDao;
+import com.share.locker.service.util.MockUtil;
 
 @Service
 public class LockerServiceImpl extends BaseServiceImpl implements LockerService {
@@ -16,8 +17,12 @@ public class LockerServiceImpl extends BaseServiceImpl implements LockerService 
 	private MachineDao machineDao;
 
 	public LockerBO getLockerById(Long lockerId) {
-		LockerBO lockerBO = lockerDao.selectLockerById(lockerId);
-		MachineBO machineBO = machineDao.selectMachineById(lockerBO.getMachineId());
+		//Mock
+		LockerBO lockerBO = new LockerBO();
+		lockerBO.setLockerId(lockerId);
+		MachineBO machineBO = new MachineBO();
+		machineBO.setMachineId(1L);
+		machineBO.setName(MockUtil.getMachineNameBylockerId(lockerId));
 		lockerBO.setMachineBO(machineBO);
 		return lockerBO;
 	}

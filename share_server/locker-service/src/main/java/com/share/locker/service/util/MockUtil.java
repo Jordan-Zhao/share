@@ -1,9 +1,12 @@
 package com.share.locker.service.util;
 
+import java.util.List;
 import java.util.Random;
 
 public class MockUtil {
 	private final static String[] nickArr = {"村里小芳","孤独求败","摘花骑士","雷神","巨魔"};
+
+	public final static String[] MACHINE_NAME_LIST = {"浙大1号柜","万科西庐2号柜","城西银泰5号柜"};
 	
 	private final static String SERVER = "http://192.168.0.104:8080/";
 	public final static String MOCK_URL_BASE = SERVER+"locker/";
@@ -23,5 +26,9 @@ public class MockUtil {
 	public static String getRandomNick() {
 		int idx = new Random().nextInt(nickArr.length-1);
 		return nickArr[idx]+new Random().nextInt(999999);
+	}
+	
+	public static String getMachineNameBylockerId(Long lockerId) {
+		return MockUtil.MACHINE_NAME_LIST[(int)(lockerId % 3)];
 	}
 }

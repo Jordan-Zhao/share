@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.share.locker.bo.ItemBO;
+import com.share.locker.common.LockerConstants;
 
 public interface ItemService {
 	List<ItemBO> getHotItemList();
@@ -19,4 +20,7 @@ public interface ItemService {
 	void offLineItem(Long itemId);
 
 	void deleteItem(Long itemId);
+
+	// 查询lockerId对应的“TO_PUT"状态的宝贝
+	ItemBO getToPutItem(Long lockerId);
 }

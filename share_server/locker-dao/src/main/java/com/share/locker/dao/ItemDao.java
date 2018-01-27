@@ -20,5 +20,6 @@ public interface ItemDao {
 	public List<ItemImgBO> getImgByItemIdList(Map<String, Object> paramMap);
 
 	public void updateItemStatus(Map<String, Object> paramMap);
-
+	
+	public ItemBO getToPutItem(Map<String, Object> paramMap);
 }

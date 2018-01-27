@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.locker.dao.CheckCodeDao">
+
+	<parameterMap type="com.share.locker.bo.CheckCodeBO" id="ChcekCodeParamMap"></parameterMap>
+	
+	<!-- bo对象和table字段对应 -->
+	<resultMap id="BaseResultMap" type="com.share.locker.bo.CheckCodeBO">
+		<result column="id" property="id" />
+		<result column="type" property="type" />
+		<result column="check_id" property="checkId" />
+		<result column="check_code" property="checkCode" />
+		<result column="expire_time" property="expireTime" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_time" property="editTime" />
+		<result column="editor" property="editor" />
+		<result column="status" property="status" />
+	</resultMap>
+	
+	<!-- 生成验证码 -->
+	<insert id="insertCheckCode" parameterMap="ChcekCodeParamMap" useGeneratedKeys="true">
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO shr_check_code (type, check_id,check_code, expire_time,
+			create_time,edit_time, editor, status)
+		VALUES (#{type}, #{checkId}, #{checkCode},#{expireTime}, #{createTime}, #{editTime},#{editor}, #{status})
+	</insert>
+	
+	<select id="getCheckCodeList" parameterType="map" resultMap="BaseResultMap">
+		select * from shr_check_code
+		where type = #{type}
+		and status = #{status}
+		<if test="checkId != null and checkId != ''">
+			and check_id = #{checkId}
+		</if>
+		<if test="checkCode != null and codeCode != ''">
+			and check_code = #{checkCode}
+		</if>
+	</select>
+	
+</mapper>

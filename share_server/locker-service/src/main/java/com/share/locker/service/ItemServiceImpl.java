@@ -21,7 +21,9 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 
 	public List<ItemBO> getHotItemList() {
 		// TODO 先mock取前10条数据
-		List<ItemBO> itemList = itemDao.selectItemTop10(LockerConstants.MY_ITEM_STATUS_LIST);
+		List<String> statusList = new ArrayList<>();
+		statusList.add(LockerConstants.ItemStatus.ONLINE.getCode());
+		List<ItemBO> itemList = itemDao.selectItemTop10(statusList);
 		// 获取img信息
 		addImgList(itemList, LockerConstants.ImgSizeCode.SMALL);
 		
@@ -100,6 +102,14 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		itemDao.updateItemStatus(paramMap);
 	}
 	
+	// 查询lockerId对应的“TO_PUT"状态的宝贝
+	public ItemBO getToPutItem(Long lockerId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("lockerId", lockerId);
+		params.put("status", LockerConstants.ItemStatus.CREATED.getCode());
+		return itemDao.getToPutItem(params);
+	}
+
 	// 获取img信息
 	private void addImgList(List<ItemBO> itemList,LockerConstants.ImgSizeCode imgSizeCode) {
 		if (CollectionUtils.isNotEmpty(itemList)) {
