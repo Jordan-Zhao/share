@@ -10,4 +10,6 @@ public interface UserService {
 	UserBO getUserById(Long userId);
 	
 	UserBO register(UserBO userBO);
+	
+	UserBO getRandomUser();
 }

@@ -182,6 +182,21 @@ public class UserController extends BaseController {
 		return null;
 	}
 	
+	/**
+	 * TODO Mock 更换登录用户
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/mine/getRandomUser.json", method = RequestMethod.POST)
+	public Object getRandomUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		UserBO userBO = userService.getRandomUser();
+		String result = userBO.getPhoneNumber()+"-"+userBO.getPassword()+"-"+userBO.getUserId();
+		writeJsonMsg(response, true, result);
+		return null;
+	}
+	
 	
 	 public static void main(String[] arg) {
 		 long time = System.currentTimeMillis();

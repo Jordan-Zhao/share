@@ -49,4 +49,10 @@
 			#{alipayId}, #{minIconUrl}, #{midIconUrl},#{maxIconUrl},now(), now(), #{editor}, #{status})
 	</insert>
 	
+	<select id="selectAllPhoneUser" resultMap="BaseResultMap">
+		select * from shr_user
+		where status='VALID' and phone_number is not null
+	</select>
+	
+	
 </mapper>

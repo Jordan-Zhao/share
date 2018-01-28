@@ -1,5 +1,8 @@
 package com.share.locker.service;
 
+import java.util.List;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +30,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public UserBO register(UserBO userBO) {
 		userDao.insertUser(userBO);
 		return userBO;
+	}
+	
+	public UserBO getRandomUser() {
+		List<UserBO> allUserList = userDao.selectAllPhoneUser();
+		return allUserList.get(new Random().nextInt(allUserList.size() - 1));
 	}
 }
