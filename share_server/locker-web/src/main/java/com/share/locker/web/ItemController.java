@@ -149,6 +149,9 @@ public class ItemController extends BaseController {
 		//生成存件二维码
 		String code = checkCodeService.createCheckCode(LockerConstants.CheckCodeType.PUT.getCode(), String.valueOf(itemId));
 		
+		//更新宝贝状态为“已生成存件二维码”
+		itemService.updateItemStatus(itemId, LockerConstants.ItemStatus.GENERATED_PUT_QRCODE.getCode());
+		
 		Map<String, Object> map = new HashMap<>();
 		map.put("itemId", String.valueOf(itemId));
 		map.put("qrcode", code);
@@ -264,7 +267,8 @@ public class ItemController extends BaseController {
 			for(CheckCodeBO codeBO : codeBOList) {
 				Long itemId = Long.parseLong(codeBO.getCheckId());	//宝贝ID，生成code时作为checkId存入的
 				ItemBO itemBO = itemService.getItemDetail(itemId);
-				if(itemBO.getLockerId().equals(lockerId)) {	//lockerId匹配，则认为可以开门
+				if(itemBO.getStatus().equals(LockerConstants.ItemStatus.GENERATED_PUT_QRCODE.getCode()) 
+						&& itemBO.getLockerId().equals(lockerId)) {	//lockerId匹配，则认为可以开门
 					writeJsonMsg(response, true, true);
 					return null;
 				}

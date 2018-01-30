@@ -1,5 +1,8 @@
 package com.share.locker.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +38,21 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService {
 		orderBO.setEditor(renter.getNick());
 		orderBO.setStatus(LockerConstants.OrderStatus.CREATED.getCode());
 		orderDao.saveOrder(orderBO);
-		// TODO 生成存件二维码
 		return orderBO.getOrderId();
 	}
+	
+	public OrderBO getOrderById(Long orderId,String status) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("orderId", orderId);
+		params.put("status", status);
+		return orderDao.getOrderById(params);
+	}
+	
+	public void updateOrderStatus(Long orderId, String status) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("orderId", orderId);
+		params.put("status", status);
+		orderDao.updateOrderStatus(params);
+	}
+
 }

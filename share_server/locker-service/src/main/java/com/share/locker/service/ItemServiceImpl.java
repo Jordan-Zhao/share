@@ -13,6 +13,7 @@ import com.share.locker.bo.ItemBO;
 import com.share.locker.bo.ItemImgBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.dao.ItemDao;
+import com.share.locker.dao.OrderDao;
 
 @Service
 public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
@@ -109,7 +110,15 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		params.put("status", LockerConstants.ItemStatus.CREATED.getCode());
 		return itemDao.getToPutItem(params);
 	}
-
+	
+	//更新宝贝状态
+	public void updateItemStatus(Long itemId, String status) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("itemId", itemId);
+		params.put("status", status);
+		itemDao.updateItemStatus(params);
+	}
+	
 	// 获取img信息
 	private void addImgList(List<ItemBO> itemList,LockerConstants.ImgSizeCode imgSizeCode) {
 		if (CollectionUtils.isNotEmpty(itemList)) {

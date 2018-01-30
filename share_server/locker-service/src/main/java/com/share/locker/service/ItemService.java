@@ -23,4 +23,6 @@ public interface ItemService {
 
 	// 查询lockerId对应的“TO_PUT"状态的宝贝
 	ItemBO getToPutItem(Long lockerId);
+	
+	void updateItemStatus(Long itemId, String status);
 }

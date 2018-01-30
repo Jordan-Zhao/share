@@ -34,4 +34,11 @@
 		VALUES (#{itemId}, #{ownerId}, #{renterId}, #{deposit}, #{title},
 			#{takeTime}, #{fee}, #{returnLockerId},#{returnTime},#{checkTime}, now(), now(), #{editor}, #{status})
 	</insert>
+	
+	<!-- 查询单条记录 -->
+	<select id="getOrderById" parameterType="map" resultMap="BaseResultMap">
+		select * from shr_item
+		where item_id = #{orderId} and status=#{status}
+	</select>
+	
 </mapper>
