@@ -116,7 +116,7 @@ public class OrderController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/item/closeLockerAfterPut.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/item/closeLockerAfterTake.json", method = RequestMethod.POST)
 	public Object closeLockerAfterPut(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long lockerId = Long.parseLong(request.getParameter("lockerId"));
 		

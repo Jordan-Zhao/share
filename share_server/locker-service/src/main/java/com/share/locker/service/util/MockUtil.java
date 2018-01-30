@@ -8,10 +8,10 @@ public class MockUtil {
 
 	public final static String[] MACHINE_NAME_LIST = {"浙大1号柜","万科西庐2号柜","城西银泰5号柜"};
 	
-	private final static String SERVER = "http://192.168.0.104:8080/";
+	private final static String SERVER = "http://192.168.0.103:8080/";
 	public final static String MOCK_URL_BASE = SERVER+"locker/";
 	
-	public final static String MOCK_IMAGE_FILE_PATH = "C:\\dev\\IDE\\apache-tomcat-8.5.24\\webapps\\images\\";
+	public final static String MOCK_IMAGE_FILE_PATH = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/";
 	public final static String MOCK_URL_IMAGE = SERVER+"images/";
 
 	/*

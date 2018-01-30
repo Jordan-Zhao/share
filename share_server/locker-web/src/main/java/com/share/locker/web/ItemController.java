@@ -330,8 +330,8 @@ public class ItemController extends BaseController {
 		resultMap.put(LockerConstants.ImgSizeCode.NORMAL.getSizeCode(), normalFileList);
 		resultMap.put(LockerConstants.ImgSizeCode.SMALL.getSizeCode(), smallFileList);
 
-		String smallImgFilePath = MockUtil.MOCK_IMAGE_FILE_PATH + "small\\";
-		String normalImgFilePath = MockUtil.MOCK_IMAGE_FILE_PATH + "normal\\";
+		String smallImgFilePath = MockUtil.MOCK_IMAGE_FILE_PATH + "small/";
+		String normalImgFilePath = MockUtil.MOCK_IMAGE_FILE_PATH + "normal/";
 
 		Iterator<FileItem> iterator = fileItemList.iterator();
 		while (iterator.hasNext()) {
