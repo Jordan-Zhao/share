@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.locker.dao.TradeDao">
-
+<parameterMap type="com.share.locker.dao.TradeDao" id="TradeParamMap"></parameterMap>
+	
 	<!-- bo对象和table字段对应 -->
 	<resultMap id="BaseResultMap" type="com.share.locker.bo.TradeBO">
 		<result column="tradeId" property="tradeId" />
@@ -11,6 +12,7 @@
 		<result column="itemId" property="itemId" />
 		<result column="ownerId" property="ownerId" />
 		<result column="renterId" property="renterId" />
+		<result column="payWay" property="pay_way" />
 		<result column="fee" property="fee" />
 		<result column="finishTime" property="finishTime" />
 		<result column="paymentType" property="paymentType" />
@@ -20,5 +22,22 @@
 		<result column="editor" property="editor" />
 		<result column="status" property="status" />
 	</resultMap>
+
+	<!-- 创建交易记录 -->
+	<insert id="insertTrade" parameterMap="TradeParamMap" useGeneratedKeys="true">
+		<selectKey resultType="long" keyProperty="tradeId" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO shr_trade (order_id,trade_type,item_id,owner_id,renter_id,fee,finish_time,payment_type,remark,
+			create_time,edit_time, editor, status)
+		VALUES (#{orderId}, #{tradeType}, #{itemId}, #{ownerId}, #{renterId},
+			#{fee}, #{finishTime}, #{paymentType},#{remark},now(), now(), #{editor}, #{status})
+	</insert>
+
+	<select id="getTradeByOrder" parameterType="map" resultMap="BaseResultMap">
+		select * from shr_trade
+		where order_id = #{orderId} and trade_type=#{tradeType} and status='SUCCESS'
+	</select>
+	
 
 </mapper>

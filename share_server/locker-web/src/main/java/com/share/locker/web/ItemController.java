@@ -36,6 +36,7 @@ import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
 import com.share.locker.service.util.MockUtil;
 import com.share.locker.web.dto.ItemDetailDTO;
+import com.share.locker.web.dto.ItemPutLockerDTO;
 import com.sun.mail.imap.protocol.Item;
 
 @Controller
@@ -152,12 +153,7 @@ public class ItemController extends BaseController {
 		//更新宝贝状态为“已生成存件二维码”
 		itemService.updateItemStatus(itemId, LockerConstants.ItemStatus.GENERATED_PUT_QRCODE.getCode());
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("itemId", String.valueOf(itemId));
-		map.put("qrcode", code);
-		map.put("lockerId", String.valueOf(itemBO.getLockerId()));
-		map.put("machineName", MockUtil.getMachineNameBylockerId(itemBO.getLockerId()));
-		writeJsonMsg(response, true, map);	
+		writeJsonMsg(response, true, String.valueOf(itemId));	
 		return null;
 	}
 
@@ -246,6 +242,31 @@ public class ItemController extends BaseController {
 		// TODO 校验是否本人操作、是否可上架
 		itemService.deleteItem(itemId);
 		writeJsonMsg(response, true, "删除成功");
+		return null;
+	}
+	
+	/**
+	 * 存件初始化页面时，获取信息
+	 * @param request	
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/item/getPutLockerData.json", method = RequestMethod.POST)
+	public Object getPutLockerData(HttpServletRequest request, HttpServletResponse response) { 
+		Long itemId = Long.parseLong(request.getParameter("itemId"));
+		ItemBO itemBO = itemService.getItemDetail(itemId);
+		CheckCodeBO checkCodeBO = checkCodeService.getValidCheckCode(LockerConstants.CheckCodeType.PUT.getCode(), String.valueOf(itemId));
+		
+		ItemPutLockerDTO dto = new ItemPutLockerDTO();
+		dto.setItemId(itemId);
+		dto.setItemTitle(itemBO.getTitle());
+		dto.setLockerId(itemBO.getLockerId());
+		dto.setMachineName(MockUtil.getMachineNameBylockerId(itemBO.getLockerId()));
+		dto.setQrcode(checkCodeBO.getCheckCode());
+		dto.setRemainTime(BizUtil.getCheckCodeRemainTime(checkCodeBO.getCreateTime(), checkCodeBO.getExpireTime()));
+		
+		writeJsonMsg(response, true, dto);
 		return null;
 	}
 	

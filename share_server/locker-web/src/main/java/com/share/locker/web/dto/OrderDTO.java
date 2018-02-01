@@ -15,6 +15,13 @@ public class OrderDTO {
 	private String title;
 	private Date createTime;
 	private String status;
+	private String lockerId;
+	private String machineName;
+	private String takeQrcode;
+
+	private String itemSmallImgUrl;
+	private String priceStr;
+	
 	public Long getOrderId() {
 		return orderId;
 	}
@@ -50,6 +57,36 @@ public class OrderDTO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getLockerId() {
+		return lockerId;
+	}
+	public void setLockerId(String lockerId) {
+		this.lockerId = lockerId;
+	}
+	public String getMachineName() {
+		return machineName;
+	}
+	public void setMachineName(String machineName) {
+		this.machineName = machineName;
+	}
+	public String getTakeQrcode() {
+		return takeQrcode;
+	}
+	public void setTakeQrcode(String takeQrcode) {
+		this.takeQrcode = takeQrcode;
+	}
+	public String getItemSmallImgUrl() {
+		return itemSmallImgUrl;
+	}
+	public void setItemSmallImgUrl(String itemSmallImgUrl) {
+		this.itemSmallImgUrl = itemSmallImgUrl;
+	}
+	public String getPriceStr() {
+		return priceStr;
+	}
+	public void setPriceStr(String priceStr) {
+		this.priceStr = priceStr;
 	}
 	
 	

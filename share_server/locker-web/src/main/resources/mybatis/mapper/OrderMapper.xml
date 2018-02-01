@@ -37,8 +37,27 @@
 	
 	<!-- 查询单条记录 -->
 	<select id="getOrderById" parameterType="map" resultMap="BaseResultMap">
-		select * from shr_item
-		where item_id = #{orderId} and status=#{status}
+		select * from shr_order
+		where order_id = #{orderId} and status=#{status}
 	</select>
+	
+	
+	<select id="getOrderByItemId" parameterType="map" resultMap="BaseResultMap">
+		select * from shr_order
+		where item_id = #{itemId} and status=#{status}
+	</select>
+
+	<update id="updateOrderStatus" parameterType="map">
+		update shr_order 
+		set status = #{status}
+		where order_id = #{orderId} 
+	</update> 
+	
+	<!-- 查询我租用的宝贝list -->
+	<select id="getMyRentOrderList" parameterType="long" resultMap="BaseResultMap">
+		select * from shr_order
+		where renter_id = #{userId} and status != 'INVALID'
+	</select>
+	
 	
 </mapper>

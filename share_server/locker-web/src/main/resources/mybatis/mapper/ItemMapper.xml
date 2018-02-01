@@ -38,10 +38,12 @@
 	</resultMap>
 
 	<!-- TODO MOCK -->
-	<select id="selectItemTop10" parameterType="java.util.List" resultMap="BaseResultMap">
+	<select id="selectItemTop10" parameterType="java.util.List"
+		resultMap="BaseResultMap">
 		select * from shr_item
 		where status in
-		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
 			#{item}
 		</foreach>
 		order by item_id desc
@@ -56,26 +58,34 @@
 	</select>
 
 	<!-- 发布宝贝 -->
-	<insert id="saveItem" parameterMap="ItemParamMap" useGeneratedKeys="true">
+	<insert id="saveItem" parameterMap="ItemParamMap"
+		useGeneratedKeys="true">
 		<selectKey resultType="long" keyProperty="itemId" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO shr_item (user_id, title, price_time_unit, price_time,
-			price, deposit, locker_size_code,locker_id, publish_status, description,create_time,edit_time, editor, status)
-		VALUES (#{userId}, #{title}, #{priceTimeUnit}, #{priceTime}, #{price},
-			#{deposit}, #{lockerSizeCode}, #{lockerId},#{publishStatus},#{description}, now(), now(), #{editor}, #{status})
+		price, deposit, locker_size_code,locker_id, publish_status,
+		description,create_time,edit_time, editor, status)
+		VALUES (#{userId},
+		#{title}, #{priceTimeUnit}, #{priceTime}, #{price},
+		#{deposit}, #{lockerSizeCode}, #{lockerId},#{publishStatus},#{description},
+		now(), now(), #{editor}, #{status})
 	</insert>
 
 	<!-- 保存宝贝的图片URL -->
-	<insert id="saveItemImg" parameterType="java.util.List" useGeneratedKeys="true">
+	<insert id="saveItemImg" parameterType="java.util.List"
+		useGeneratedKeys="true">
 		<selectKey resultType="long" keyProperty="id" order="AFTER">
-			SELECT LAST_INSERT_ID()
+			SELECT
+			LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO shr_item_img (item_id, img_size_code, url, create_time,
 		edit_time, editor, status)
 		values
-		<foreach collection="list" item="itemImg" index="index" separator=",">
-			(#{itemImg.itemId}, #{itemImg.imgSizeCode}, #{itemImg.url},now(), now(),
+		<foreach collection="list" item="itemImg" index="index"
+			separator=",">
+			(#{itemImg.itemId}, #{itemImg.imgSizeCode},
+			#{itemImg.url},now(), now(),
 			#{itemImg.editor}, #{itemImg.status})
 		</foreach>
 	</insert>
@@ -85,7 +95,8 @@
 		select * from shr_item
 		where user_id = #{userId}
 		and status in
-		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+		<foreach collection="statusList" index="index" item="item"
+			open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
@@ -94,31 +105,36 @@
 	<select id="getImgByItemIdList" parameterType="map" resultMap="ItemImgResultMap">
 		select * from shr_item_img
 		where item_id in
-		<foreach collection="itemIdList" index="index" item="item" open="(" separator="," close=")">
+		<foreach collection="itemIdList" index="index" item="item"
+			open="(" separator="," close=")">
 			#{item}
 		</foreach>
-		and status in
-		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
-			#{item}
-		</foreach>
+		<if test="statusList != null and statusList.size > 0">
+			and status in
+			<foreach collection="statusList" index="index" item="item"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
 		<if test="imgSizeCode != null and imgSizeCode != ''">
 			and img_size_code = #{imgSizeCode}
 		</if>
 	</select>
-	
+
 	<update id="updateItemStatus" parameterType="map">
-		update shr_item 
+		update shr_item
 		set status = #{status}
-		where item_id = #{itemId} 
-	</update> 
-	
-	<!-- 根据lockerId查询创建状态的宝贝，只有一条数据 -->
-	<select id="getToPutItem" parameterType="map" resultMap="BaseResultMap">
+		where item_id = #{itemId}
+	</update>
+
+	<!-- 根据lockerId和状态查询 -->
+	<select id="getItemByLockerId" parameterType="map" resultMap="BaseResultMap">
 		select * from shr_item
 		where locker_id = #{lockerId}
-		and status = #{status}
+		and status =
+		#{status}
 	</select>
-	
+
 
 
 </mapper>

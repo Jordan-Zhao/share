@@ -19,16 +19,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.share.locker.bo.ItemBO;
+import com.share.locker.bo.OrderBO;
 import com.share.locker.bo.CheckCodeBO;
 import com.share.locker.bo.UserBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.common.util.StringUtil;
 import com.share.locker.service.ItemService;
+import com.share.locker.service.OrderService;
 import com.share.locker.service.CheckCodeService;
 import com.share.locker.service.UserService;
 import com.share.locker.service.util.BizUtil;
 import com.share.locker.service.util.MockUtil;
 import com.share.locker.web.dto.ItemDTO;
+import com.share.locker.web.dto.OrderDTO;
 import com.share.locker.web.dto.UserDTO;
 
 @Controller
@@ -41,6 +44,8 @@ public class UserController extends BaseController {
 	private ItemService itemService;
 	@Autowired
 	private CheckCodeService checkCodeService;
+	@Autowired
+	private OrderService orderService;
 
 	/**
 	 * 登录
@@ -102,7 +107,7 @@ public class UserController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/mine/getMyPublishItems.json", method = RequestMethod.POST)
-	public Object publishItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Object getMyPublishItems(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<ItemDTO> itemDTOList = new ArrayList<>();
 		UserBO loginUser = BizUtil.getLoginUser(request);
 		List<ItemBO> itemList = itemService.getItemByUserId(loginUser.getUserId(), LockerConstants.MY_ITEM_STATUS_LIST);
@@ -119,6 +124,7 @@ public class UserController extends BaseController {
 				dto.setPriceStr(
 						BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
 				dto.setComment(MockUtil.MOCK_COMMENT_NUMBER);
+				dto.setStatus(itemBO.getStatus());
 				itemDTOList.add(dto);
 			}
 		}
@@ -205,5 +211,41 @@ public class UserController extends BaseController {
 		 Date date = new Date(time);
 		 System.out.println(date);
 	 }
-  
+	 
+	 
+	 /**
+		 * 获取我的租用记录
+		 * 
+		 * @param request
+		 * @param response
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/mine/getMyRentOrderList.json", method = RequestMethod.POST)
+		public Object getMyRentOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+			List<OrderDTO> orderDTOs = new ArrayList<>();
+			UserBO loginUser = BizUtil.getLoginUser(request);
+			
+			List<OrderBO> orderBOList = orderService.getMyRentOrderList(loginUser.getUserId());
+			
+			// 组装DTO
+			if (!CollectionUtils.isEmpty(orderBOList)) {
+				for (OrderBO orderBO:orderBOList) {
+					OrderDTO orderDTO = new OrderDTO();
+					orderDTO.setOrderId(orderBO.getOrderId());
+					orderDTO.setCreateTime(orderBO.getCreateTime());
+					orderDTO.setDeposit(BizUtil.convertDbPrice2Float(orderBO.getDeposit()));
+					orderDTO.setItemId(orderBO.getItemId());
+					orderDTO.setStatus(orderBO.getStatus());
+					orderDTO.setTitle(orderBO.getTitle());
+					ItemBO itemBO = itemService.getItemDetail(orderBO.getItemId());
+					orderDTO.setPriceStr(BizUtil.convertPrice2Str(itemBO.getPriceTime(), itemBO.getPriceTimeUnit(), itemBO.getPrice()));
+					orderDTO.setItemSmallImgUrl(itemBO.getSmallImgList().get(0).getUrl());
+					orderDTOs.add(orderDTO);
+				}
+			}
+			writeJsonMsg(response, true, orderDTOs);
+			return null;
+		}
+		
 }

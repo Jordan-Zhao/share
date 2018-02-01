@@ -21,5 +21,5 @@ public interface ItemDao {
 
 	public void updateItemStatus(Map<String, Object> paramMap);
 	
-	public ItemBO getToPutItem(Map<String, Object> paramMap);
+	public List<ItemBO> getItemByLockerId(Map<String, Object> paramMap);
 }

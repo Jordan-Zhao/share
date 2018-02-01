@@ -13,6 +13,7 @@ public class ItemDTO {
 	private Float deposit;
 	private String priceStr;
 	private Integer comment;
+	private String status;
 
 	public Long getItemId() {
 		return itemId;
@@ -62,4 +63,11 @@ public class ItemDTO {
 		this.comment = comment;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

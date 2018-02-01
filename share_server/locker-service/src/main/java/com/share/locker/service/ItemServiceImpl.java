@@ -27,7 +27,7 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		List<ItemBO> itemList = itemDao.selectItemTop10(statusList);
 		// 获取img信息
 		addImgList(itemList, LockerConstants.ImgSizeCode.SMALL);
-		
+
 		return itemList;
 	}
 
@@ -67,18 +67,12 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 
 	public ItemBO getItemDetail(Long itemId) {
 		ItemBO itemBO = itemDao.selectItemById(itemId);
-		List<Long> itemIdList = new ArrayList<>();
-		itemIdList.add(itemBO.getItemId());
-		List<String> imgStatusList = new ArrayList<>();
-		imgStatusList.add(LockerConstants.BaseDataStatus.VALID.getCode());
+		
+		List<ItemBO> list = new ArrayList<>();
+		list.add(itemBO);
+		addImgList(list, LockerConstants.ImgSizeCode.SMALL);
+		addImgList(list, LockerConstants.ImgSizeCode.NORMAL);
 
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("itemIdList", itemIdList);
-		paramMap.put("statusList", imgStatusList);
-		paramMap.put("imgSizeCode", LockerConstants.ImgSizeCode.NORMAL.getSizeCode());
-		List<ItemImgBO> imgList = itemDao.getImgByItemIdList(paramMap);
-
-		itemBO.setNormalImgList(imgList);
 		return itemBO;
 	}
 
@@ -102,25 +96,37 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		paramMap.put("status", LockerConstants.ItemStatus.DELETED.getCode());
 		itemDao.updateItemStatus(paramMap);
 	}
-	
-	// 查询lockerId对应的“TO_PUT"状态的宝贝
+
+	// 查询lockerId对应的“GENERATED_PUT_QRCODE"状态的宝贝
 	public ItemBO getToPutItem(Long lockerId) {
+		List<ItemBO> itemList = getItemByLockerId(lockerId, LockerConstants.ItemStatus.GENERATED_PUT_QRCODE.getCode());
+		return itemList.get(0);
+	}
+
+	// 查询lockerId对应的“TO_PUT"状态的宝贝
+	public ItemBO getLockedItem(Long lockerId) {
+		List<ItemBO> itemList = getItemByLockerId(lockerId, LockerConstants.ItemStatus.LOCKED.getCode());
+		return itemList.get(0);
+	}
+
+	// 查询lockerId和状态查询
+	public List<ItemBO> getItemByLockerId(Long lockerId, String status) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("lockerId", lockerId);
-		params.put("status", LockerConstants.ItemStatus.CREATED.getCode());
-		return itemDao.getToPutItem(params);
+		params.put("status", status);
+		return itemDao.getItemByLockerId(params);
 	}
-	
-	//更新宝贝状态
+
+	// 更新宝贝状态
 	public void updateItemStatus(Long itemId, String status) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("itemId", itemId);
 		params.put("status", status);
 		itemDao.updateItemStatus(params);
 	}
-	
+
 	// 获取img信息
-	private void addImgList(List<ItemBO> itemList,LockerConstants.ImgSizeCode imgSizeCode) {
+	private void addImgList(List<ItemBO> itemList, LockerConstants.ImgSizeCode imgSizeCode) {
 		if (CollectionUtils.isNotEmpty(itemList)) {
 			List<Long> itemIdList = new ArrayList<>();
 			for (ItemBO itemBO : itemList) {
@@ -139,16 +145,15 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 				for (ItemImgBO imgBO : imgList) {
 					for (ItemBO itemBO : itemList) {
 						if (imgBO.getItemId().equals(itemBO.getItemId())) {
-							if (CollectionUtils.isEmpty(itemBO.getSmallImgList())) {
-								if(imgSizeCode.getSizeCode().equals(LockerConstants.ImgSizeCode.SMALL.getSizeCode())) {
+							if (imgSizeCode.getSizeCode().equals(LockerConstants.ImgSizeCode.SMALL.getSizeCode())) {
+								if(CollectionUtils.isEmpty(itemBO.getSmallImgList())) {
 									itemBO.setSmallImgList(new ArrayList<>());
-								}else {
+								}
+								itemBO.getSmallImgList().add(imgBO);
+							} else {
+								if(CollectionUtils.isEmpty(itemBO.getNormalImgList())) {
 									itemBO.setNormalImgList(new ArrayList<>());
 								}
-							}
-							if(imgSizeCode.getSizeCode().equals(LockerConstants.ImgSizeCode.SMALL.getSizeCode())) {
-								itemBO.getSmallImgList().add(imgBO);
-							}else {
 								itemBO.getNormalImgList().add(imgBO);
 							}
 						}

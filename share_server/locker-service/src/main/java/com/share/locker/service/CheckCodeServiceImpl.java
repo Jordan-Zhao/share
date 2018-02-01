@@ -29,6 +29,16 @@ public class CheckCodeServiceImpl extends BaseServiceImpl implements CheckCodeSe
 	 * @return
 	 */
 	public String createCheckCode(String type, String checkId) {
+		return createCheckCode(type, checkId,LockerConstants.VERIFY_CODE_EXPIRE_TIME); // 10分钟
+	}
+	
+	/**
+	 * 生成code
+	 * @param type
+	 * @param checkId
+	 * @return
+	 */
+	public String createCheckCode(String type, String checkId, Long expireTime) {
 		String code = StringUtil.getRandomNumberString();
 		CheckCodeBO codeBO = new CheckCodeBO();
 		codeBO.setType(type);
@@ -36,7 +46,7 @@ public class CheckCodeServiceImpl extends BaseServiceImpl implements CheckCodeSe
 		codeBO.setCreateTime(new Date());
 		codeBO.setEditor(LockerConstants.EDITOR_SYSTEM);
 		codeBO.setEditTime(new Date());
-		codeBO.setExpireTime(LockerConstants.VERIFY_CODE_EXPIRE_TIME); // 10分钟
+		codeBO.setExpireTime(expireTime); // 10分钟
 		codeBO.setStatus(LockerConstants.BaseDataStatus.VALID.toString());
 		codeBO.setCheckId(checkId);
 		checkCodeDao.insertCheckCode(codeBO);
@@ -67,7 +77,7 @@ public class CheckCodeServiceImpl extends BaseServiceImpl implements CheckCodeSe
 	/**
 	 * 获取可用的code
 	 */
-	public String getValidCheckCode(String type, String checkId) {
+	public CheckCodeBO getValidCheckCode(String type, String checkId) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("type", type);
 		params.put("checkId", checkId);
@@ -75,7 +85,7 @@ public class CheckCodeServiceImpl extends BaseServiceImpl implements CheckCodeSe
 		List<CheckCodeBO> checkCodeBOList = checkCodeDao.getCheckCodeList(params);
 		checkCodeBOList = filterExpiredCheckCode(checkCodeBOList);
 		if (CollectionUtils.isNotEmpty(checkCodeBOList)) {
-			return checkCodeBOList.get(0).getCheckCode();
+			return checkCodeBOList.get(0);
 		}
 		return null;
 	}

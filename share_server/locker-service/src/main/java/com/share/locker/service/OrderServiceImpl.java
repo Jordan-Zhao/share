@@ -1,6 +1,8 @@
 package com.share.locker.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +50,22 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService {
 		return orderDao.getOrderById(params);
 	}
 	
+	public OrderBO getOrderByItemId(Long itemId,String status) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("itemId", itemId);
+		params.put("status", status);
+		return orderDao.getOrderByItemId(params);
+	}
+	
 	public void updateOrderStatus(Long orderId, String status) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("orderId", orderId);
 		params.put("status", status);
 		orderDao.updateOrderStatus(params);
+	}
+	
+	public List<OrderBO> getMyRentOrderList(Long userId){
+		return orderDao.getMyRentOrderList(userId);
 	}
 
 }

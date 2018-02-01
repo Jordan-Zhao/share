@@ -35,9 +35,9 @@ public class LockerConstants {
 	 */
 	public static enum ItemStatus {
 		CREATED("CREATED", "创建成功"), GENERATED_PUT_QRCODE("GENERATED_PUT_QRCODE", "已生成存件二维码"), ONLINE("ONLINE",
-				"已存入柜门，上架"), LOCKED("LOCKED", "正在下单，锁定中"), USING("USING", "租用中"), EXCEPTION("EXCEPTION",
-						"异常情况，人工介入中"), OFFLINE("OFFLINE",
-								"下架"), DELETED("DELETED", "删除"), INVALID("INVALID", "无效数据，数据订正删除等造成");
+				"已存入柜门，上架"), LOCKED("LOCKED", "正在下单，锁定中"), USING("USING", "租用中"), 
+				EXCEPTION("EXCEPTION", "异常情况，人工介入中"), OFFLINE("OFFLINE","下架"), DELETED("DELETED", "删除"), 
+				INVALID("INVALID", "无效数据，数据订正删除等造成");
 
 		private String code;
 		private String name;
@@ -182,7 +182,9 @@ public class LockerConstants {
 	
 	public final static Long VERIFY_CODE_EXPIRE_TIME = 1000*60*10L;//验证码有效期,10分钟
 	
-	public final static Long QR_CODE_EXPIRE_TIME = 1000*60*60L;//验证码有效期，一个小时
+	public final static Long QR_CODE_EXPIRE_TIME_TAKE = 1000*60*60L;//取件验证码有效期，一个小时
+	
+	public final static Long QR_CODE_EXPIRE_TIME_RETURN = 1000*60*60L;//还件验证码有效期，一个小时
 	
 	/**
 	 * 用户状态
@@ -225,12 +227,111 @@ public class LockerConstants {
 	 *
 	 */
 	public static enum CheckCodeType {
-		USER_REGISTER("USER_REGISTER","注册码"),PUT("PUT", "存件二维码"), TAKE("TAKE", "取件二维码");
+		USER_REGISTER("USER_REGISTER","注册码"),PUT("PUT", "存件二维码"), TAKE("TAKE", "取件二维码"), RETURN("RETURN", "还件二维码");
 
 		private String code;
 		private String name;
 
 		CheckCodeType(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+	
+	 /**
+     * 支付方式
+     */
+    public enum PayWay{
+        ALIPAY("ALIPAY","支付宝"),WECHAT("WECHAT","微信支付");
+        private String code;
+        private String name;
+
+        PayWay(String code,String name){
+            this.code=code;this.name=name;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+    
+    /**
+	 * 交易类型
+	 * 
+	 * @author Jordan
+	 *
+	 */
+	public static enum TradeType {
+		PAY_DEPOSIT("PAY_DEPOSIT", "支付押金"), PAY_RENT_FEE("PAY_RENT_FEE", "支付租金"),REFUND_DEPOSIT("PAY_RENT_FEE","退还押金");
+
+		private String code;
+		private String name;
+
+		TradeType(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+	
+	/**
+	 * 交易状态
+	 * 
+	 * @author Jordan
+	 *
+	 */
+	public static enum TradeStatus {
+		SUCCESS("SUCCESS", "支付成功"), FAIL("PAY_RENT_FEE", "支付失败"),INVALID("INVALID","无效数据");
+
+		private String code;
+		private String name;
+
+		TradeStatus(String code, String name) {
 			this.code = code;
 			this.name = name;
 		}

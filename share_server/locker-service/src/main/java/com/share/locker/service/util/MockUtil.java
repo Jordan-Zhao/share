@@ -31,4 +31,8 @@ public class MockUtil {
 	public static String getMachineNameBylockerId(Long lockerId) {
 		return MockUtil.MACHINE_NAME_LIST[(int)(lockerId % 3)];
 	}
+	
+	public static void refundDeposit(Long orderId) {
+		
+	}
 }

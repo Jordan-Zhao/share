@@ -99,5 +99,6 @@ public class TradeBO extends BaseBO {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	
 
 }
