@@ -85,17 +85,7 @@ public class TradeController extends BaseController {
 		// 更新订单状态“已生成取件二维码”
 		orderService.updateOrderStatus(orderId, LockerConstants.OrderStatus.GENERATED_TAKE_QRCODE.getCode());
 
-		OrderDTO orderDTO = new OrderDTO();
-		orderDTO.setOrderId(orderBO.getOrderId());
-		orderDTO.setItemId(orderBO.getItemId());
-		orderDTO.setDeposit(orderDTO.getDeposit());
-		orderDTO.setTitle(orderBO.getTitle());
-		orderDTO.setCreateTime(orderBO.getCreateTime());
-		orderDTO.setStatus(orderBO.getStatus());
-		orderDTO.setLockerId(String.valueOf(itemBO.getLockerId()));
-		orderDTO.setMachineName(MockUtil.getMachineNameBylockerId(itemBO.getLockerId()));
-		orderDTO.setTakeQrcode(takeQrcode);
-		writeJsonMsg(response, true, orderDTO);
+		writeJsonMsg(response, true, orderId);
 		return null;
 	}
 

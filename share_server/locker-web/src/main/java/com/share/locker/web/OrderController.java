@@ -27,8 +27,9 @@ import com.share.locker.service.OrderService;
 import com.share.locker.service.TradeService;
 import com.share.locker.service.util.BizUtil;
 import com.share.locker.service.util.MockUtil;
-import com.share.locker.web.dto.OrderDTO;
+import com.share.locker.web.dto.OrderPayDepositDTO;
 import com.share.locker.web.dto.OrderReturnLockerDTO;
+import com.share.locker.web.dto.OrderTakeItemDTO;
 import com.share.locker.web.dto.PayFeeDTO;
 
 @Controller
@@ -69,24 +70,67 @@ public class OrderController extends BaseController {
 		// 创建订单
 		Long orderId = orderService.rent(loginUser, itemId);
 
-		// 查询订单信息，支付页面显示
+		writeJsonMsg(response, true, orderId);
+		return null;
+	}
+	
+	/**
+	 * 订单，初始化支付押金页面，获取押金金额信息
+	 * 
+	 * @param request
+	 *            机柜传过来：lockerId（保存在机柜中）
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/order/getPayDepositData.json", method = RequestMethod.POST)
+	public Object getPayDepositData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long orderId = Long.parseLong(request.getParameter("orderId"));
+
+		OrderPayDepositDTO payDepositDTO = new OrderPayDepositDTO();
+
+		payDepositDTO.setOrderId(orderId);
 		OrderBO orderBO = orderService.getOrderById(orderId, LockerConstants.OrderStatus.CREATED.getCode());
+		payDepositDTO.setTitle(orderBO.getTitle());
+		ItemBO itemBO = itemService.getItemDetail(orderBO.getItemId());
+		payDepositDTO.setDeposit(BizUtil.convertDbPrice2Float(itemBO.getDeposit()));
 
-		OrderDTO orderDTO = new OrderDTO();
-		orderDTO.setOrderId(orderBO.getOrderId());
-		orderDTO.setItemId(orderBO.getItemId());
-		orderDTO.setDeposit(orderDTO.getDeposit());
-		orderDTO.setTitle(orderBO.getTitle());
-		orderDTO.setCreateTime(orderBO.getCreateTime());
-		orderDTO.setStatus(orderBO.getStatus());
-		orderDTO.setDeposit(BizUtil.convertDbPrice2Float(orderBO.getDeposit()));
-
-		writeJsonMsg(response, true, orderDTO);
+		writeJsonMsg(response, true, payDepositDTO);
 		return null;
 	}
 
 	/**
-	 * 用户取件，扫描二维码时，机柜发来请求，判断是否可以开柜
+	 * 订单，初始化取件页面，获取取件二维码等信息
+	 * 
+	 * @param request orderId
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/order/getTakeItemData.json", method = RequestMethod.POST)
+	public Object getTakeItemData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Long orderId = Long.parseLong(request.getParameter("orderId"));
+
+		OrderBO orderBO = orderService.getOrderById(orderId, LockerConstants.OrderStatus.GENERATED_TAKE_QRCODE.getCode());
+		ItemBO itemBO = itemService.getItemDetail(orderBO.getItemId());
+		OrderTakeItemDTO orderTakeItemDTO = new OrderTakeItemDTO();
+		orderTakeItemDTO.setItemTitle(orderBO.getTitle());
+		orderTakeItemDTO.setLockerId(itemBO.getLockerId());
+		orderTakeItemDTO.setMachineName(MockUtil.getMachineNameBylockerId(orderTakeItemDTO.getLockerId()));
+		orderTakeItemDTO.setOrderId(orderId);
+		
+		CheckCodeBO checkCodeBO = checkCodeService.getValidCheckCode(LockerConstants.CheckCodeType.TAKE.getCode(), 
+				String.valueOf(orderId));
+		orderTakeItemDTO.setQrcode(checkCodeBO.getCheckCode());
+		
+		orderTakeItemDTO.setRemainTime(BizUtil.getCheckCodeRemainTime(checkCodeBO.getCreateTime(), checkCodeBO.getExpireTime()));
+
+		writeJsonMsg(response, true, orderTakeItemDTO);
+		return null;
+	}
+	
+	/**
+	 * 订单，用户取件操作，扫描二维码时，机柜发来请求，判断是否可以开柜
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）、qrcode(用户手机扫码)
@@ -119,7 +163,7 @@ public class OrderController extends BaseController {
 	}
 
 	/**
-	 * 用户取件后，关闭柜门。机柜发来请求，告知柜门已关闭，用户已取走宝贝
+	 * 订单，用户取件操作，用户取件后，关闭柜门。机柜发来请求，告知柜门已关闭，用户已取走宝贝
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）
@@ -146,7 +190,7 @@ public class OrderController extends BaseController {
 	}
 
 	/**
-	 * 还件前，支付租金页面
+	 * 订单，还件，初始化用户支付租金页面，获取租金信息
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）
@@ -173,7 +217,7 @@ public class OrderController extends BaseController {
 	}
 	
 	/**
-	 * 换件，获取换件二维码等信息
+	 * 订单，还件，初始化用户还件页面，获取换件二维码等信息
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）
@@ -204,7 +248,7 @@ public class OrderController extends BaseController {
 	}
 
 	/**
-	 * 用户还件，扫描二维码时，机柜发来请求，获取柜门id，然后打开柜门
+	 * 订单，还件，用户还件，扫描二维码时，机柜发来请求，获取柜门id，然后打开柜门
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）、qrcode(用户手机扫码)
@@ -234,7 +278,7 @@ public class OrderController extends BaseController {
 	}
 
 	/**
-	 * 用户还件后，关闭柜门。机柜发来请求，告知用户已还件
+	 * 订单，还件，用户还件后，关闭柜门。机柜发来请求，告知用户已还件
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）
@@ -261,7 +305,7 @@ public class OrderController extends BaseController {
 	}
 	
 	/**
-	 * 用户还件后，管理员完成检查，宝贝没有损坏，通知服务端退还押金，上架宝贝
+	 * 订单，用户还件后，管理员完成检查，宝贝没有损坏，通知服务端退还押金，上架宝贝
 	 * 
 	 * @param request
 	 *            机柜传过来：lockerId（保存在机柜中）

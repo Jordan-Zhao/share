@@ -369,7 +369,7 @@ public class ItemController extends BaseController {
 				File normalFile = new File(normalImgFilePath, simpleFileName);
 				formitem.write(normalFile);
 				normalFileList.add(MockUtil.MOCK_URL_IMAGE + "normal/" + simpleFileName);
-				//生成200的小图片
+				//生成宽200的小图片
 				ImageUtil.zoomByWidthAndSave(normalImgFilePath+simpleFileName, 200, smallImgFilePath+simpleFileName);
 				smallFileList.add(MockUtil.MOCK_URL_IMAGE + "small/" + simpleFileName);
 			} catch (Exception e) {
