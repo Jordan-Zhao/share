@@ -39,13 +39,49 @@ public class ImageUtil {
 		 * File outFile = new File("d:\\2.jpg"); ImageIO.write(imageFirst, "jpg",
 		 * outFile);// 写图片
 		 */
-		File fromFile = new File(baseUrl + "a.jpg");
-		zoomByWidth(new FileInputStream(fromFile), 1080, baseUrl + "a3.jpg");
-		
-		BufferedImage target = zoomInImage(ImageIO.read(fromFile),1080,800);
-		//ImageIO.write(target, "jpg", new File(baseUrl+"a2.jpg"));
+		// File fromFile = new File(baseUrl + "a.jpg");
+		// zoomByWidth(new FileInputStream(fromFile), 1080, baseUrl + "a3.jpg");
+		//
+		// BufferedImage target = zoomInImage(ImageIO.read(fromFile),1080,800);
+		// ImageIO.write(target, "jpg", new File(baseUrl+"a2.jpg"));
+
+		////////////////////
+		try {
+//			String fromImgPath = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/normal/a.jpg";
+//			String targetFilePath = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/normal/a"+System.currentTimeMillis()+".jpg";
+			
+
+			String fromImgPath = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/normal/b.jpg";
+			String targetFilePath = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/normal/b"+System.currentTimeMillis()+".jpg";
+			// "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/normal/b.jpg"
+
+
+			int targetWidth = 200;
+			int targetHeight = 130;
+			
+			BufferedImage originalImage = ImageIO.read(new File(fromImgPath));
+			int originalWidth = originalImage.getWidth();
+			int originalheight = originalImage.getHeight();
+			
+			int originalHeight1 = 130*(originalheight/200);
+			int sy = (originalheight - originalHeight1) / 2;
+			
+//			int targetHeight = (int) (1.0 * targetWidth / originalWidth * originalImage.getHeight());
+			BufferedImage targetImage = new BufferedImage(targetWidth, targetHeight, originalImage.getType());
+
+			Graphics graphics = targetImage.getGraphics();
+			graphics.drawImage(originalImage, 0, 0, targetWidth, targetHeight, 0, sy, originalWidth, originalHeight1, null);
+			
+//			(originalImage, 0, 0, targetWidth, targetHeight, null);
+			graphics.dispose();
+
+			ImageIO.write(targetImage, "jpg", new File(targetFilePath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	/**
 	 * 按宽度缩放图片并保存
 	 * 
@@ -60,19 +96,64 @@ public class ImageUtil {
 				// 图片偏小，直接保存
 				ImageIO.write(originalImage, "jpg", new File(targetFilePath));
 			} else {
-				int targetHeight = (int)(1.0*targetWidth / originalWidth * originalImage.getHeight());
+				int targetHeight = (int) (1.0 * targetWidth / originalWidth * originalImage.getHeight());
 				BufferedImage targetImage = new BufferedImage(targetWidth, targetHeight, originalImage.getType());
-				
+
 				Graphics graphics = targetImage.getGraphics();
 				graphics.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
 				graphics.dispose();
-				
+
 				ImageIO.write(targetImage, "jpg", new File(targetFilePath));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+//	/**
+//	 * 按宽度缩放图片并保存
+//	 * 
+//	 * @param filePath
+//	 * @param targetWidth
+//	 */
+//	public static void zoomByWidthAndSave(String fromImgPath, int targetWidth, int targetHeight, String targetFilePath) {
+//		try {
+//			BufferedImage originalImage = ImageIO.read(new File(fromImgPath));
+//			int originalWidth = originalImage.getWidth();
+//			int originalHeight = originalImage.getHeight();
+//			
+//			int scaleRectWidth = 0;
+//			int scaleRectHeight = 0;
+//
+//			if (originalWidth <= targetWidth) {
+//				targetWidth = originalWidth;
+//				scaleRectWidth = originalHeight;
+//			}
+//			
+//			if(originalHeight <= targetHeight) {
+//				targetHeight = originalHeight;
+//			}
+//			
+//			BufferedImage targetImage = new BufferedImage(targetWidth, targetHeight, originalImage.getType());
+//			
+//			
+//			if (originalWidth <= targetWidth) {
+//				// 图片偏小，直接保存
+//				ImageIO.write(originalImage, "jpg", new File(targetFilePath));
+//			} else {
+//				int targetHeight = (int) (1.0 * targetWidth / originalWidth * originalImage.getHeight());
+//				BufferedImage targetImage = new BufferedImage(targetWidth, targetHeight, originalImage.getType());
+//
+//				Graphics graphics = targetImage.getGraphics();
+//				graphics.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+//				graphics.dispose();
+//
+//				ImageIO.write(targetImage, "jpg", new File(targetFilePath));
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * 按宽度缩放图片
@@ -88,13 +169,13 @@ public class ImageUtil {
 				// 图片偏小，直接保存
 				ImageIO.write(originalImage, "jpg", new File(targetFilePath));
 			} else {
-				int targetHeight = (int)(1.0*targetWidth / originalWidth * originalImage.getHeight());
+				int targetHeight = (int) (1.0 * targetWidth / originalWidth * originalImage.getHeight());
 				BufferedImage targetImage = new BufferedImage(targetWidth, targetHeight, originalImage.getType());
-				
+
 				Graphics graphics = targetImage.getGraphics();
 				graphics.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
 				graphics.dispose();
-				
+
 				ImageIO.write(targetImage, "jpg", new File(targetFilePath));
 			}
 		} catch (Exception e) {
@@ -212,8 +293,7 @@ public class ImageUtil {
 			}
 
 			int[] imageArrayFirst = new int[(width - border) * height];// 从图片中读取RGB
-			imageArrayFirst = imageFirst.getRGB(border, 0, (width - border), height, imageArrayFirst, 0,
-					(width - border));
+			imageArrayFirst = imageFirst.getRGB(border, 0, (width - border), height, imageArrayFirst, 0, (width - border));
 
 			/* 2对第二张图片做相同的处理begin */
 			int[] imageArraySecond = new int[widthTwo * heightTwo];
@@ -309,8 +389,7 @@ public class ImageUtil {
 			}
 
 			int[] imageArrayFirst = new int[(width - border) * height];// 从图片中读取RGB
-			imageArrayFirst = imageFirst.getRGB(border, 0, (width - border), height, imageArrayFirst, 0,
-					(width - border));
+			imageArrayFirst = imageFirst.getRGB(border, 0, (width - border), height, imageArrayFirst, 0, (width - border));
 
 			// 生成新图片
 			BufferedImage imageResult = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -414,8 +493,7 @@ public class ImageUtil {
 		int type = bufferedimage.getColorModel().getTransparency();
 		BufferedImage img;
 		Graphics2D graphics2d;
-		(graphics2d = (img = new BufferedImage(h, w, type)).createGraphics())
-				.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		(graphics2d = (img = new BufferedImage(h, w, type)).createGraphics()).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		graphics2d.rotate(Math.toRadians(degree), w / 2, h / 2 + (w > h ? (w - h) / 2 : (h - w) / 2));
 		graphics2d.drawImage(bufferedimage, 0, 0, null);
 		graphics2d.dispose();
@@ -434,8 +512,7 @@ public class ImageUtil {
 		int type = bufferedimage.getColorModel().getTransparency();
 		BufferedImage img;
 		Graphics2D graphics2d;
-		(graphics2d = (img = new BufferedImage(h, w, type)).createGraphics())
-				.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		(graphics2d = (img = new BufferedImage(h, w, type)).createGraphics()).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		graphics2d.rotate(Math.toRadians(270), w / 2, h / 2 + (w - h) / 2);
 		graphics2d.drawImage(bufferedimage, 0, 0, null);
 		graphics2d.dispose();
@@ -454,8 +531,7 @@ public class ImageUtil {
 		int type = bufferedimage.getColorModel().getTransparency();
 		BufferedImage img;
 		Graphics2D graphics2d;
-		(graphics2d = (img = new BufferedImage(h, w, type)).createGraphics())
-				.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		(graphics2d = (img = new BufferedImage(h, w, type)).createGraphics()).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		graphics2d.rotate(Math.toRadians(90), w / 2 - (w - h) / 2, h / 2);
 		graphics2d.drawImage(bufferedimage, 0, 0, null);
 		graphics2d.dispose();
@@ -470,8 +546,7 @@ public class ImageUtil {
 		int type = bufferedimage.getColorModel().getTransparency();
 		BufferedImage img;
 		Graphics2D graphics2d;
-		(graphics2d = (img = new BufferedImage(w, h, type)).createGraphics())
-				.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		(graphics2d = (img = new BufferedImage(w, h, type)).createGraphics()).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		graphics2d.rotate(Math.toRadians(180), w / 2, h / 2);
 		graphics2d.drawImage(bufferedimage, 0, 0, null);
 		graphics2d.dispose();
