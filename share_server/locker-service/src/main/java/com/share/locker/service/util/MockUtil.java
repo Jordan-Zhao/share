@@ -8,12 +8,17 @@ public class MockUtil {
 
 	public final static String[] MACHINE_NAME_LIST = {"浙大1号柜","万科西庐2号柜","城西银泰5号柜"};
 	
-	private final static String SERVER = "http://192.168.0.103:8080/";
-	public final static String MOCK_URL_BASE = SERVER+"locker/";
+	//本地
+//	private final static String SERVER = "http://192.168.0.103:8080/";
+//	public final static String MOCK_IMAGE_FILE_PATH = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/";
 	
-	public final static String MOCK_IMAGE_FILE_PATH = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/";
+	//线上
+	private final static String SERVER = "http://47.96.141.170/";
+	public final static String MOCK_IMAGE_FILE_PATH = "/home/share/images/";
+	
+	public final static String MOCK_URL_BASE = SERVER+"locker/";
 	public final static String MOCK_URL_IMAGE = SERVER+"images/";
-
+	
 	/*
 	 * public final static String MOCK_URL_BASE =
 	 * "http://192.168.2.195:8080/locker/";
