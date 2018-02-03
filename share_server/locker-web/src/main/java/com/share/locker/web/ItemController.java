@@ -373,7 +373,7 @@ public class ItemController extends BaseController {
 				ImageUtil.zoomByWidthAndSave(normalImgFilePath+simpleFileName, 200, smallImgFilePath+simpleFileName);
 				smallFileList.add(MockUtil.MOCK_URL_IMAGE + "small/" + simpleFileName);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException("save upload images fail.",e);
 			}
 		}
 		return resultMap;
