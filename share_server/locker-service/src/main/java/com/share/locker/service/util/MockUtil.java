@@ -1,6 +1,5 @@
 package com.share.locker.service.util;
 
-import java.util.List;
 import java.util.Random;
 
 public class MockUtil {
@@ -9,7 +8,7 @@ public class MockUtil {
 	public final static String[] MACHINE_NAME_LIST = {"浙大1号柜","万科西庐2号柜","城西银泰5号柜"};
 	
 	//本地
-//	private final static String SERVER = "http://192.168.0.103:8080/";
+//	private final static String SERVER = "http://192.168.0.101:8080/";
 //	public final static String MOCK_IMAGE_FILE_PATH = "/Users/jordan/dev/IDE/apache-tomcat-8.5.27/webapps/images/";
 	
 	//线上
@@ -40,4 +39,5 @@ public class MockUtil {
 	public static void refundDeposit(Long orderId) {
 		
 	}
+	
 }

@@ -353,5 +353,78 @@ public class LockerConstants {
 		}
 
 	}
+	
+	/**
+	 * 系统配置参数类型
+	 * 
+	 * @author Jordan
+	 *
+	 */
+	public static enum SystemSettingType {
+		DEFAULT("DEFAULT", "默认");
+
+		private String code;
+		private String name;
+
+		SystemSettingType(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+	
+	/**
+	 * 系统配置参数key
+	 * 
+	 * @author Jordan
+	 *
+	 */
+	public static enum SystemSettingKey {
+		OPT_BANNER_ITEM_ID("OPT_BANNER_ITEM_ID", "banner对应的itemId"),
+		OPT_LEFT_ITEM_ID("OPT_LEFT_ITEM_ID", "运营位左边对应的itemId"),
+		OPT_RIGHT_ITEM_ID1("OPT_RIGHT_ITEM_ID1", "运营位右1对应的itemId"),
+		OPT_RIGHT_ITEM_ID2("OPT_RIGHT_ITEM_ID2", "运营位右2对应的itemId");
+
+		private String code;
+		private String name;
+
+		SystemSettingKey(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
 
 }

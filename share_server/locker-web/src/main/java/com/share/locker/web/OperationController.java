@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.google.gson.reflect.TypeToken;
 import com.share.locker.bo.ItemBO;
 import com.share.locker.bo.OperationConfigBO;
+import com.share.locker.bo.SettingBO;
 import com.share.locker.common.LockerConstants;
 import com.share.locker.common.util.JsonUtil;
 import com.share.locker.service.ItemService;
@@ -28,6 +29,7 @@ import com.share.locker.service.util.BizUtil;
 import com.share.locker.service.util.MockUtil;
 import com.share.locker.web.dto.BannerDTO;
 import com.share.locker.web.dto.HotItemDTO;
+import com.share.locker.web.dto.ItemDTO;
 import com.share.locker.web.dto.OperationSettingDTO;
 
 @Controller
@@ -51,11 +53,14 @@ public class OperationController extends BaseController {
 	public Object getOperationData(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// center
 		OperationConfigBO centerConfig = operationService.getOperationCenterConfig();
-		OperationSettingDTO operationSettingDTO = (OperationSettingDTO)JsonUtil.json2Object(centerConfig.getContent(), OperationSettingDTO.class);
-		
+		OperationSettingDTO operationSettingDTO = (OperationSettingDTO) JsonUtil.json2Object(centerConfig.getContent(), OperationSettingDTO.class);
+
 		// banner
 		OperationConfigBO bannerConfig = operationService.getOperationBannerConfig();
-		operationSettingDTO.setBannerDTOList(JsonUtil.json2List(bannerConfig.getContent(), new TypeToken<List<BannerDTO>>() {}));
+		operationSettingDTO.setBannerDTOList(JsonUtil.json2List(bannerConfig.getContent(), new TypeToken<List<BannerDTO>>() {
+		}));
+
+		mockOptData(operationSettingDTO);
 
 		// hot items
 		List<ItemBO> itemBOList = itemService.getHotItemList();
@@ -63,7 +68,7 @@ public class OperationController extends BaseController {
 		operationSettingDTO.setHotItemDTOList(hotItemList);
 
 		writeJsonMsg(response, true, operationSettingDTO);
-		return null; 
+		return null;
 	}
 
 	private List<HotItemDTO> convertHotItemList(List<ItemBO> itemBOList) {
@@ -89,23 +94,39 @@ public class OperationController extends BaseController {
 	}
 
 	private String getRandomItemUrl() {
-		String[] arr = { "http://192.168.0.104:8080/locker/item2.png", "http://192.168.0.104:8080/locker/item3.png",
-				"http://192.168.0.104:8080/locker/item4.png" };
+		String[] arr = { "http://192.168.0.104:8080/locker/item2.png", "http://192.168.0.104:8080/locker/item3.png", "http://192.168.0.104:8080/locker/item4.png" };
 		return arr[new Random().nextInt(3)];
 	}
 
-	  public static void main(String[] arg) {
-	    	/*String json = "[{\"imgUrl\":\"http://192.168.0.104:8080/locker/banner1.png\",\"itemId\":46}]";
-	    	List list = JsonUtil.json2List(json, new TypeToken<BannerDTO>() {}) ;  */	
-	    	
-	    	List<BannerDTO> bannerDTOs = new ArrayList<>();
-	    	BannerDTO bannerDTO = new BannerDTO();
-	    	bannerDTO.setImgUrl("http://192.168.0.104:8080/locker/banner1.png");
-	    	bannerDTO.setItemId(46L);
-	    	bannerDTOs.add(bannerDTO);
-	    	String string = JsonUtil.toJson(bannerDTOs);
-	    	System.out.println(string);
-	    	
-	    	List list = JsonUtil.json2List(string, new TypeToken<List<BannerDTO>>() {}) ;
-	    }
+	//TODO mock
+	private void mockOptData(OperationSettingDTO operationSettingDTO) {
+		List<HotItemDTO> hotItemDTOs = operationSettingDTO.getHotItemDTOList();
+		if (CollectionUtils.isNotEmpty(hotItemDTOs)) {
+			for(BannerDTO bannerDTO : operationSettingDTO.getBannerDTOList()) {
+				bannerDTO.setItemId(hotItemDTOs.get(new Random().nextInt(hotItemDTOs.size())).getItemId());
+			}
+			operationSettingDTO.setLeftItemId(hotItemDTOs.get(new Random().nextInt(hotItemDTOs.size())).getItemId());
+			operationSettingDTO.setRightItemId1(hotItemDTOs.get(new Random().nextInt(hotItemDTOs.size())).getItemId());
+			operationSettingDTO.setRightItemId2(hotItemDTOs.get(new Random().nextInt(hotItemDTOs.size())).getItemId());
+		}
+	}
+
+	public static void main(String[] arg) {
+		/*
+		 * String json =
+		 * "[{\"imgUrl\":\"http://192.168.0.104:8080/locker/banner1.png\",\"itemId\":46}]";
+		 * List list = JsonUtil.json2List(json, new TypeToken<BannerDTO>() {}) ;
+		 */
+
+		List<BannerDTO> bannerDTOs = new ArrayList<>();
+		BannerDTO bannerDTO = new BannerDTO();
+		bannerDTO.setImgUrl("http://192.168.0.104:8080/locker/banner1.png");
+		bannerDTO.setItemId(46L);
+		bannerDTOs.add(bannerDTO);
+		String string = JsonUtil.toJson(bannerDTOs);
+		System.out.println(string);
+
+		List list = JsonUtil.json2List(string, new TypeToken<List<BannerDTO>>() {
+		});
+	}
 }
